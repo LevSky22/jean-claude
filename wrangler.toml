@@ -1,0 +1,27 @@
+name = "jean-claude"
+compatibility_date = "2023-10-30"
+pages_build_output_dir = "dist"
+
+# Rate limiting configuration will be set up during deployment
+# Rate limiters are not supported in local development
+
+# Development environment
+[env.development]
+name = "jean-claude-dev"
+compatibility_flags = ["nodejs_compat"]
+
+[env.development.vars]
+# This will be overridden by actual environment variables or secrets
+MISTRAL_API_KEY = "placeholder"
+
+# Production environment
+[env.production]
+name = "jean-claude-prod"
+compatibility_flags = ["nodejs_compat"]
+
+# Environment variables (set via secrets in production)
+# For local development, create a .env file with:
+# MISTRAL_API_KEY=your-api-key-here
+
+# Example of setting secrets in production:
+# wrangler secret put MISTRAL_API_KEY --env production
