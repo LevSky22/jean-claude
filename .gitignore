@@ -65,3 +65,4 @@ wrangler.toml.bak
 .taskmaster/
 .claude/
 .mcp.json
+CLAUDE.md
