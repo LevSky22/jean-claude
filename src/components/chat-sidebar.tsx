@@ -34,12 +34,34 @@ interface SessionItemProps {
 
 function SessionItem({ session, isActive, onClick, onDelete }: SessionItemProps) {
   const [showMenu, setShowMenu] = useState(false)
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation()
     onDelete(session.id)
+    setShowDeleteDialog(false)
     setShowMenu(false)
   }
+
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setShowMenu(false)
+    setShowDeleteDialog(true)
+  }
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => {
+      if (showMenu) {
+        setShowMenu(false)
+      }
+    }
+
+    if (showMenu) {
+      document.addEventListener('click', handleClickOutside)
+      return () => document.removeEventListener('click', handleClickOutside)
+    }
+  }, [showMenu])
 
   const formatDate = (date: Date) => {
     const now = new Date()
@@ -59,17 +81,26 @@ function SessionItem({ session, isActive, onClick, onDelete }: SessionItemProps)
   }
 
   return (
-    <button
-      className={cn(
-        'group relative p-3 rounded-lg transition-all duration-200 border w-full text-left focus:outline-none focus:ring-2 focus:ring-[#0055A4] focus:ring-offset-2',
-        isActive 
-          ? 'bg-[#0055A4] text-white border-[#0055A4] shadow-md' 
-          : 'bg-white hover:bg-gray-50 border-gray-200 hover:shadow-md hover:border-gray-300'
-      )}
-      onClick={onClick}
-      aria-pressed={isActive}
-      aria-label={`Open conversation "${session.title}" created on ${formatDate(session.updatedAt)}`}
-    >
+    <div className="relative">
+      <button
+        className={cn(
+          'group relative p-3 rounded-lg transition-all duration-200 border w-full text-left focus:outline-none focus:ring-2 focus:ring-[#0055A4] focus:ring-offset-2',
+          isActive 
+            ? 'bg-[#0055A4] text-white border-[#0055A4] shadow-md' 
+            : 'bg-white hover:bg-gray-50 border-gray-200 hover:shadow-md hover:border-gray-300'
+        )}
+        onClick={(e) => {
+          // Prevent clicking session while dialog is open
+          if (showDeleteDialog) {
+            e.preventDefault()
+            e.stopPropagation()
+            return
+          }
+          onClick()
+        }}
+        aria-pressed={isActive}
+        aria-label={`Open conversation "${session.title}" created on ${formatDate(session.updatedAt)}`}
+      >
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
@@ -114,37 +145,49 @@ function SessionItem({ session, isActive, onClick, onDelete }: SessionItemProps)
           </Button>
           
           {showMenu && (
-            <div className="absolute top-6 right-0 z-50 bg-white border border-gray-200 rounded-md shadow-lg">
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <button className="w-full px-3 py-2 text-left text-red-600 hover:bg-red-50 flex items-center gap-2 text-sm">
-                    <Trash2 className="h-3 w-3" />
-                    Delete
-                  </button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Delete this conversation?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action is irreversible. The conversation "{session.title}" will be permanently deleted.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel onClick={() => setShowMenu(false)}>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={handleDelete}
-                      className="bg-[#EF4135] hover:bg-[#EF4135]/90"
-                    >
-                      Delete
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+            <div className="absolute top-6 right-0 z-[100] bg-white border border-gray-200 rounded-md shadow-lg">
+              <button 
+                className="w-full px-3 py-2 text-left text-red-600 hover:bg-red-50 flex items-center gap-2 text-sm"
+                onClick={handleDeleteClick}
+              >
+                <Trash2 className="h-3 w-3" />
+                Delete
+              </button>
             </div>
           )}
         </div>
       </div>
-    </button>
+      
+      {/* Delete Dialog - moved outside the menu */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={(open) => {
+        if (!open) {
+          // Dialog is closing, just update state without side effects
+          setShowDeleteDialog(false)
+        }
+      }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this conversation?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action is irreversible. The conversation "{session.title}" will be permanently deleted.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={(e) => {
+              e.stopPropagation()
+              setShowDeleteDialog(false)
+            }}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-[#EF4135] hover:bg-[#EF4135]/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      </button>
+    </div>
   )
 }
 
@@ -180,7 +223,27 @@ export default function ChatSidebar({
       // Focus the close button when sidebar opens for keyboard users
       setTimeout(() => closeButtonRef.current?.focus(), 100)
     }
-  }, [isOpen, currentSessionId, messageCount])
+  }, [isOpen])
+  
+  // Separate effect for session updates
+  useEffect(() => {
+    if (isOpen && currentSessionId) {
+      // Only reload if we have a session and it changed
+      loadSessions()
+    }
+  }, [currentSessionId])
+  
+  // Update message count without reloading all sessions
+  useEffect(() => {
+    if (isOpen && messageCount && currentSessionId) {
+      // Just update the current session's message count
+      setSessions(prev => prev.map(s => 
+        s.id === currentSessionId 
+          ? { ...s, messages: Array(messageCount).fill(null) } 
+          : s
+      ))
+    }
+  }, [messageCount, currentSessionId])
 
   // Handle keyboard navigation
   useEffect(() => {

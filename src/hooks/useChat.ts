@@ -336,6 +336,12 @@ export function useChat(): UseChatReturn {
   }, [])
 
   const loadSession = useCallback(async (sessionId: string) => {
+    // Don't reload if it's already the current session
+    if (sessionId === currentSessionId) {
+      console.log('Session already loaded, skipping reload')
+      return
+    }
+    
     try {
       const session = await transcriptStore.getTranscript(sessionId)
       if (session) {
@@ -359,7 +365,7 @@ export function useChat(): UseChatReturn {
       console.error('Failed to load session:', err)
       setError('Failed to load conversation')
     }
-  }, [])
+  }, [currentSessionId])
 
   const toggleSidebar = useCallback(() => {
     setIsSidebarOpen(prev => !prev)
