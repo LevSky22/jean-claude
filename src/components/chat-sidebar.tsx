@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { transcriptStore, type ChatTranscript } from '@/services/transcriptStore'
 import { cn } from '@/lib/utils'
-import { MessageCircle, Plus, X, MoreVertical, Trash2 } from 'lucide-react'
+import { MessageCircle, Plus, ChevronLeft, MoreVertical, Trash2 } from 'lucide-react'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,6 +22,7 @@ interface ChatSidebarProps {
   onSessionSelect: (sessionId: string) => void
   onNewSession: () => void
   onDeleteAll: () => void
+  messageCount?: number
 }
 
 interface SessionItemProps {
@@ -153,7 +154,8 @@ export default function ChatSidebar({
   currentSessionId, 
   onSessionSelect, 
   onNewSession,
-  onDeleteAll 
+  onDeleteAll,
+  messageCount
 }: ChatSidebarProps) {
   const [sessions, setSessions] = useState<ChatTranscript[]>([])
   const [loading, setLoading] = useState(false)
@@ -178,7 +180,7 @@ export default function ChatSidebar({
       // Focus the close button when sidebar opens for keyboard users
       setTimeout(() => closeButtonRef.current?.focus(), 100)
     }
-  }, [isOpen])
+  }, [isOpen, currentSessionId, messageCount])
 
   // Handle keyboard navigation
   useEffect(() => {
@@ -264,19 +266,16 @@ export default function ChatSidebar({
               size="sm"
               onClick={onClose}
               className="h-8 w-8 p-0"
-              aria-label="Close conversation menu"
+              aria-label="Hide conversation menu"
             >
-              <X className="h-4 w-4" aria-hidden="true" />
+              <ChevronLeft className="h-4 w-4" aria-hidden="true" />
             </Button>
           </header>
 
           {/* New Chat Button */}
           <div className="p-4 border-b border-gray-200 bg-white">
             <Button
-              onClick={() => {
-                onNewSession()
-                onClose()
-              }}
+              onClick={onNewSession}
               className="w-full bg-[#0055A4] hover:bg-[#0055A4]/90 text-white"
             >
               <Plus className="h-4 w-4 mr-2" />
@@ -312,10 +311,7 @@ export default function ChatSidebar({
                     <SessionItem
                       session={session}
                       isActive={session.id === currentSessionId}
-                      onClick={() => {
-                        onSessionSelect(session.id)
-                        onClose()
-                      }}
+                      onClick={() => onSessionSelect(session.id)}
                       onDelete={handleDeleteSession}
                     />
                   </li>
@@ -352,7 +348,6 @@ export default function ChatSidebar({
                       onClick={() => {
                         onDeleteAll()
                         setSessions([])
-                        onClose()
                       }}
                       className="bg-[#EF4135] hover:bg-[#EF4135]/90"
                     >

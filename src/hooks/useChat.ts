@@ -39,7 +39,7 @@ export function useChat(): UseChatReturn {
   const [error, setError] = useState<string | null>(null)
   const [currentTranscript, setCurrentTranscript] = useState<ChatTranscript | null>(null)
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null)
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 
   // Monitor online/offline status
   useEffect(() => {

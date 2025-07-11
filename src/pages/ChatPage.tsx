@@ -86,12 +86,12 @@ export default function ChatPage() {
         onSessionSelect={loadSession}
         onNewSession={newChat}
         onDeleteAll={deleteAllMessages}
+        messageCount={messages.length}
       />
       
       {/* Grid row 1: Header (auto height) */}
       <div>
         <ChatHeader
-          onNewChat={newChat}
           onToggleSidebar={toggleSidebar}
           isSidebarOpen={isSidebarOpen}
         />
