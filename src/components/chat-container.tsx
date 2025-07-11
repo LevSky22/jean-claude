@@ -51,7 +51,7 @@ export default function ChatContainer({
   return (
     <section 
       ref={containerRef} 
-      className="h-full overflow-y-auto px-4 py-6 focus:outline-none focus:ring-2 focus:ring-[#0055A4] focus:ring-inset"
+      className="h-full overflow-y-auto px-4 py-6 bg-white focus:outline-none focus:ring-2 focus:ring-[#0055A4] focus:ring-inset"
       aria-label="Message history"
       role="log"
       aria-live="polite"
@@ -59,7 +59,7 @@ export default function ChatContainer({
       tabIndex={0}
       style={{ overscrollBehavior: 'contain' }}
     >
-      <div className="max-w-[720px] mx-auto flex flex-col gap-6 flex-1">
+      <div className="max-w-[600px] mx-auto flex flex-col gap-2 flex-1">
         {messages.length === 0 ? (
           <header className="flex-1 flex flex-col items-center justify-center text-center p-6 relative" role="banner">
             <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none" aria-hidden="true">
@@ -74,7 +74,7 @@ export default function ChatContainer({
             </p>
           </header>
         ) : (
-          <div role="group" aria-label="Conversation messages">
+          <div role="group" aria-label="Conversation messages" className="flex flex-col space-y-1">
             {messages.map((message) => (
             <ChatMessage
               key={message.id}
