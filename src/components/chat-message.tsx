@@ -53,10 +53,7 @@ export default function ChatMessage({
         'px-4 py-2 rounded-[1.25rem] relative z-10',
         isBot
           ? 'bg-[#e5e5ea] text-black rounded-bl-md'
-          : 'bg-[#0055A4] text-white rounded-br-md',
-        isBot && isStreaming && !isComplete && 'shadow-lg transform-gpu',
-        isBot && showCursor && 'ring-1 ring-blue-200 ring-opacity-50',
-        isBot && showCursor && 'animate-[breathe_3s_ease-in-out_infinite]'
+          : 'bg-[#0055A4] text-white rounded-br-md'
       )}
     >
       {/* Message bubble tail - much more subtle */}
@@ -67,7 +64,7 @@ export default function ChatMessage({
           : 'right-[-4px] bg-[#0055A4]'
       )}></div>
       
-      <div className="prose prose-sm max-w-none break-words font-sans leading-tight">
+      <div className="max-w-none break-words font-sans leading-tight">
         {isBot ? (
           <ReactMarkdown
             components={{
@@ -93,7 +90,7 @@ export default function ChatMessage({
                   }
                   return child
                 })
-                return <p className="mb-2 last:mb-0">{processedChildren}</p>
+                return <p className="mb-2 last:mb-0 font-normal">{processedChildren}</p>
               },
               em: ({ children }) => <em className="italic font-medium">{children}</em>,
               strong: ({ children }) => <strong className="font-bold">{children}</strong>,
