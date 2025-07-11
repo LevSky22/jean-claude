@@ -8,6 +8,7 @@ interface Message {
   text: string
   isBot: boolean
   isStreaming?: boolean
+  streamingBuffer?: string
 }
 
 interface ChatContainerProps {

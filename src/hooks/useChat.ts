@@ -69,6 +69,7 @@ export function useChat(): UseChatReturn {
 
   const sendMessage = useCallback(async (text: string) => {
     console.log('sendMessage called with:', text)
+    console.log('Current state:', { isWaiting, isStreaming, isOffline, messagesCount: messages.length })
     if (!text.trim() || isWaiting || isOffline) {
       console.log('sendMessage early return:', { text: text.trim(), isWaiting, isOffline })
       return
@@ -155,6 +156,7 @@ export function useChat(): UseChatReturn {
           (chunk: string) => {
             console.log('Received chunk:', chunk)
             fullResponse += chunk
+            // Update message text for real-time display
             setMessages(prev => 
               prev.map(msg => 
                 msg.id === botMessage.id 
@@ -262,51 +264,66 @@ export function useChat(): UseChatReturn {
     
     setIsStreaming(true)
     
-    // Set the full text immediately - ChatMessage component handles animation
-    setMessages(prev => 
-      prev.map(msg => 
-        msg.id === botMessageId 
-          ? { ...msg, text: randomResponse }
-          : msg
-      )
-    )
-    
-    // Simulate response completion after a delay
-    setTimeout(() => {
-      setIsStreaming(false)
-      setMessages(prev => 
-        prev.map(msg => 
-          msg.id === botMessageId 
-            ? { ...msg, isStreaming: false }
-            : msg
+    // Simulate streaming by updating the buffer incrementally
+    let currentIndex = 0
+    const simulateStreaming = () => {
+      if (currentIndex < randomResponse.length) {
+        const chunkSize = Math.floor(Math.random() * 5) + 1 // Random chunk size 1-5
+        currentIndex = Math.min(currentIndex + chunkSize, randomResponse.length) // Prevent overflow
+        
+        const streamingText = randomResponse.slice(0, currentIndex)
+        // console.log('Mock streaming update:', { currentIndex, chunkSize, streamingText: streamingText.substring(Math.max(0, currentIndex - 20)) })
+        
+        setMessages(prev => 
+          prev.map(msg => 
+            msg.id === botMessageId 
+              ? { ...msg, text: streamingText }
+              : msg
+          )
         )
-      )
+        
+        // Continue streaming with realistic delay
+        setTimeout(simulateStreaming, Math.random() * 100 + 50) // 50-150ms delay
+      } else {
+        // Streaming complete
+        setIsStreaming(false)
+        setMessages(prev => 
+          prev.map(msg => 
+            msg.id === botMessageId 
+              ? { ...msg, isStreaming: false, text: randomResponse }
+              : msg
+          )
+        )
 
-      // Save mock response to IndexedDB after completion
-      setTimeout(async () => {
-        try {
-          if (currentSessionId) {
-            const updatedSession = await transcriptStore.addMessageToSession(currentSessionId, {
-              id: botMessageId,
-              content: randomResponse,
-              role: 'assistant',
-              timestamp: new Date()
-            })
-            if (updatedSession) {
-              setCurrentTranscript(updatedSession)
-              
-              // Check for export reminder (every 10 messages)
-              const totalMessages = updatedSession.messages.length
-              if (totalMessages > 0 && totalMessages % 10 === 0) {
-                setShowExportReminder(true)
+        // Save mock response to IndexedDB after completion
+        setTimeout(async () => {
+          try {
+            if (currentSessionId) {
+              const updatedSession = await transcriptStore.addMessageToSession(currentSessionId, {
+                id: botMessageId,
+                content: randomResponse,
+                role: 'assistant',
+                timestamp: new Date()
+              })
+              if (updatedSession) {
+                setCurrentTranscript(updatedSession)
+                
+                // Check for export reminder (every 10 messages)
+                const totalMessages = updatedSession.messages.length
+                if (totalMessages > 0 && totalMessages % 10 === 0) {
+                  setShowExportReminder(true)
+                }
               }
             }
+          } catch (err) {
+            console.error('Failed to save mock response to transcript:', err)
           }
-        } catch (err) {
-          console.error('Failed to save mock response to transcript:', err)
-        }
-      }, 0)
-    }, randomResponse.length * 30) // Delay based on text length
+        }, 0)
+      }
+    }
+    
+    // Start simulated streaming
+    simulateStreaming()
   }, [currentSessionId])
 
   const newChat = useCallback(() => {

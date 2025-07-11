@@ -5,6 +5,7 @@ export interface Message {
   text: string
   isBot: boolean
   isStreaming?: boolean
+  streamingBuffer?: string // For accumulating streaming chunks
 }
 
 export interface ChatResponse {

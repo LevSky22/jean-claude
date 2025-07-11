@@ -6,85 +6,32 @@ interface ChatMessageProps {
   message: string
   isBot: boolean
   isStreaming?: boolean
-  streamingSpeed?: number
 }
 
 export default function ChatMessage({
   message,
   isBot,
   isStreaming = false,
-  streamingSpeed = 30,
 }: ChatMessageProps) {
   const [displayedText, setDisplayedText] = useState('')
   const [isComplete, setIsComplete] = useState(!isStreaming)
+  const [showCursor, setShowCursor] = useState(false)
   const messageRef = useRef<HTMLDivElement>(null)
-  const lastAnnouncedRef = useRef('')
 
-  // Adaptive streaming speed based on character type
-  const getAdaptiveSpeed = (char: string, baseSpeed: number) => {
-    if (!char) return baseSpeed
-    
-    // Slower for punctuation to create natural pauses
-    if (['.', '!', '?', ';', ':'].includes(char)) {
-      return baseSpeed * 3
-    }
-    
-    // Slightly slower for commas
-    if (char === ',') {
-      return baseSpeed * 1.5
-    }
-    
-    // Faster for spaces
-    if (char === ' ') {
-      return baseSpeed * 0.5
-    }
-    
-    return baseSpeed
-  }
-
+  // Simple streaming animation - just display the text directly during streaming
   useEffect(() => {
     if (isStreaming && isBot) {
-      setDisplayedText('')
+      // For streaming messages, display the text directly with cursor
+      setDisplayedText(message || '')
+      setShowCursor(true)
       setIsComplete(false)
-      lastAnnouncedRef.current = ''
-
-      let index = 0
-      let timeoutId: number
-
-      const typeNextChar = () => {
-        if (index < message.length) {
-          setDisplayedText((prev) => {
-            const newText = prev + message[index]
-            // Announce complete sentences to screen readers
-            const lastSentenceEnd = newText.lastIndexOf('.')
-            if (lastSentenceEnd > lastAnnouncedRef.current.length) {
-              lastAnnouncedRef.current = newText.substring(0, lastSentenceEnd + 1)
-            }
-            return newText
-          })
-          
-          const currentChar = message[index]
-          index++
-          
-          // Schedule next character with adaptive speed
-          const nextDelay = getAdaptiveSpeed(currentChar, streamingSpeed)
-          timeoutId = setTimeout(typeNextChar, nextDelay)
-        } else {
-          setIsComplete(true)
-        }
-      }
-
-      // Start typing
-      typeNextChar()
-
-      return () => {
-        if (timeoutId) clearTimeout(timeoutId)
-      }
     } else {
-      setDisplayedText(message)
+      // For non-streaming messages, display immediately
+      setDisplayedText(message || '')
+      setShowCursor(false)
       setIsComplete(true)
     }
-  }, [message, isBot, isStreaming, streamingSpeed])
+  }, [message, isBot, isStreaming])
 
   // Removed scrollIntoView - handled by ChatContainer
 
@@ -97,7 +44,9 @@ export default function ChatMessage({
         isBot
           ? 'bg-gray-100 text-gray-800 self-start rounded-tl-none slide-in-from-left-2'
           : 'bg-[#0055A4] text-white self-end rounded-tr-none slide-in-from-right-2',
-        isBot && isStreaming && !isComplete && 'animate-pulse'
+        isBot && isStreaming && !isComplete && 'shadow-lg transform-gpu',
+        isBot && showCursor && 'ring-1 ring-blue-200 ring-opacity-50',
+        isBot && showCursor && 'animate-[breathe_3s_ease-in-out_infinite]'
       )}
       role="article"
       aria-label={isBot ? 'Message from Jean-Claude' : 'Your message'}
@@ -147,7 +96,20 @@ export default function ChatMessage({
         ) : (
           <p className="whitespace-pre-wrap">{displayedText}</p>
         )}
-        {isBot && isStreaming && !isComplete && (
+        
+        {/* Enhanced streaming cursor */}
+        {isBot && showCursor && (
+          <span 
+            className="inline-block w-0.5 h-4 bg-gray-600 ml-0.5 animate-pulse"
+            style={{ 
+              animation: 'blink 1s infinite',
+              animationTimingFunction: 'ease-in-out'
+            }}
+            aria-hidden="true"
+          />
+        )}
+        
+        {isBot && isStreaming && !isComplete && !showCursor && (
           <span 
             className="inline-flex items-center ml-1 gap-0.5"
             aria-label="Jean-Claude is typing"
