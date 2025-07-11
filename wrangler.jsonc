@@ -9,15 +9,6 @@
   "compatibility_date": "2025-01-11",
   "compatibility_flags": ["nodejs_compat"],
   
-  "env": {
-    "development": {
-      "name": "jean-claude-dev"
-    },
-    "production": {
-      "name": "jean-claude-prod"
-    }
-  },
-  
   "vars": {
     "ENVIRONMENT": "production"
   },

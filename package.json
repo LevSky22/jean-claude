@@ -6,16 +6,16 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "build:worker": "npm run build && npm run build:worker-only",
+    "build:worker": "npm run build && npm run build:worker-only && npm run copy:assetsignore",
     "build:worker-only": "esbuild src/worker.ts --bundle --outfile=dist/_worker.js --format=esm --platform=neutral --target=es2022",
+    "copy:assetsignore": "echo '_worker.js' > dist/.assetsignore",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "preview": "vite preview",
-    "dev:worker": "wrangler dev --env development --port 3000",
-    "deploy": "npm run build:worker && wrangler deploy --env production",
-    "deploy:dev": "npm run build:worker && wrangler deploy --env development"
+    "dev:worker": "wrangler dev --port 3000",
+    "deploy": "npm run build:worker && wrangler deploy"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.14",
