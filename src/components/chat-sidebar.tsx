@@ -4,16 +4,13 @@ import { transcriptStore, type ChatTranscript } from '@/services/transcriptStore
 import { cn } from '@/lib/utils'
 import { MessageCircle, Plus, ChevronLeft, MoreVertical, Trash2 } from 'lucide-react'
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
 interface ChatSidebarProps {
   isOpen: boolean
@@ -159,33 +156,30 @@ function SessionItem({ session, isActive, onClick, onDelete }: SessionItemProps)
       </div>
       
       {/* Delete Dialog - moved outside the menu */}
-      <AlertDialog open={showDeleteDialog} onOpenChange={(open) => {
-        if (!open) {
-          // Dialog is closing, just update state without side effects
-          setShowDeleteDialog(false)
-        }
-      }}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete this conversation?</AlertDialogTitle>
-            <AlertDialogDescription>
+      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete this conversation?</DialogTitle>
+            <DialogDescription>
               This action is irreversible. The conversation "{session.title}" will be permanently deleted.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={(e) => {
-              e.stopPropagation()
-              setShowDeleteDialog(false)
-            }}>Cancel</AlertDialogCancel>
-            <AlertDialogAction
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowDeleteDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button
               onClick={handleDelete}
               className="bg-[#EF4135] hover:bg-[#EF4135]/90"
             >
               Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       </button>
     </div>
   )
@@ -202,6 +196,7 @@ export default function ChatSidebar({
 }: ChatSidebarProps) {
   const [sessions, setSessions] = useState<ChatTranscript[]>([])
   const [loading, setLoading] = useState(false)
+  const [showDeleteAllDialog, setShowDeleteAllDialog] = useState(false)
   const sidebarRef = useRef<HTMLDivElement>(null)
   const closeButtonRef = useRef<HTMLButtonElement>(null)
 
@@ -386,39 +381,46 @@ export default function ChatSidebar({
           {/* Footer */}
           <div className="p-4 border-t border-gray-200 bg-white space-y-3">
             {sessions.length > 0 && (
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Delete all conversations
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action is irreversible. All your conversations with
-                      Jean-Claude will be permanently deleted.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={() => {
-                        onDeleteAll()
-                        setSessions([])
-                      }}
-                      className="bg-[#EF4135] hover:bg-[#EF4135]/90"
-                    >
-                      Yes, delete all
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
+                  onClick={() => setShowDeleteAllDialog(true)}
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete all conversations
+                </Button>
+                <Dialog open={showDeleteAllDialog} onOpenChange={setShowDeleteAllDialog}>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Are you sure?</DialogTitle>
+                      <DialogDescription>
+                        This action is irreversible. All your conversations with
+                        Jean-Claude will be permanently deleted.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                      <Button
+                        variant="outline"
+                        onClick={() => setShowDeleteAllDialog(false)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          onDeleteAll()
+                          setSessions([])
+                          setShowDeleteAllDialog(false)
+                        }}
+                        className="bg-[#EF4135] hover:bg-[#EF4135]/90"
+                      >
+                        Yes, delete all
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </>
             )}
             
             <p className="text-xs text-gray-500 text-center">

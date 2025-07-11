@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { Keyboard } from 'lucide-react'
 import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 
 interface KeyboardShortcut {
@@ -55,14 +55,14 @@ export function KeyboardShortcutsDialog() {
         <span className="sr-only">Keyboard shortcuts</span>
       </Button>
 
-      <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-        <AlertDialogContent className="max-w-2xl">
-          <AlertDialogHeader>
-            <AlertDialogTitle>Keyboard shortcuts</AlertDialogTitle>
-            <AlertDialogDescription>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Keyboard shortcuts</DialogTitle>
+            <DialogDescription>
               Use these shortcuts to navigate faster
-            </AlertDialogDescription>
-          </AlertDialogHeader>
+            </DialogDescription>
+          </DialogHeader>
           
           <div className="mt-4">
             <table className="w-full">
@@ -90,8 +90,8 @@ export function KeyboardShortcutsDialog() {
               Tip: Press <kbd className="px-2 py-1 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Ctrl + ?</kbd> to show this help
             </p>
           </div>
-        </AlertDialogContent>
-      </AlertDialog>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }
