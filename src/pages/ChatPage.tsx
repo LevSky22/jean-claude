@@ -6,11 +6,9 @@ import OfflineBanner from '@/components/offline-banner'
 import RateLimitToast from '@/components/rate-limit-toast'
 import { ExportReminder } from '@/components/export-reminder'
 import SkipNav from '@/components/skip-nav'
-import { KeyboardShortcutsDialog } from '@/components/keyboard-shortcuts-dialog'
 import { StatusAnnouncer } from '@/components/status-announcer'
 import PrivacyFooter from '@/components/privacy-footer'
 import { useChat } from '@/hooks/useChat'
-import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
 
 export default function ChatPage() {
   const {
@@ -35,39 +33,6 @@ export default function ChatPage() {
     closeSidebar,
   } = useChat()
 
-  // Keyboard shortcuts
-  useKeyboardShortcuts([
-    {
-      key: 'n',
-      ctrlKey: true,
-      action: newChat,
-      description: 'Nouvelle conversation',
-    },
-    {
-      key: 'e',
-      ctrlKey: true,
-      action: exportMessages,
-      description: 'Exporter la conversation',
-    },
-    {
-      key: 'b',
-      ctrlKey: true,
-      action: toggleSidebar,
-      description: 'Basculer la barre latérale',
-    },
-    {
-      key: '/',
-      ctrlKey: true,
-      action: () => {
-        // Focus the chat input
-        const input = document.getElementById('chat-message-input')
-        if (input) {
-          input.focus()
-        }
-      },
-      description: 'Focus sur la zone de saisie',
-    },
-  ])
 
   return (
     <div className="chat-page-grid">
@@ -153,7 +118,6 @@ export default function ChatPage() {
         </div>
       )}
 
-      <KeyboardShortcutsDialog />
       
       {/* Status announcer for screen readers */}
       <StatusAnnouncer 
