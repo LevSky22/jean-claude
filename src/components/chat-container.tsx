@@ -25,7 +25,12 @@ export default function ChatContainer({
 
   useEffect(() => {
     if (containerRef.current) {
-      containerRef.current.scrollTop = containerRef.current.scrollHeight
+      // Use requestAnimationFrame to ensure layout is complete
+      requestAnimationFrame(() => {
+        if (containerRef.current) {
+          containerRef.current.scrollTop = containerRef.current.scrollHeight
+        }
+      })
     }
   }, [messages])
 
@@ -45,14 +50,15 @@ export default function ChatContainer({
   return (
     <section 
       ref={containerRef} 
-      className="flex-1 overflow-y-auto px-4 py-6 focus:outline-none focus:ring-2 focus:ring-[#0055A4] focus:ring-inset"
+      className="h-full overflow-y-auto px-4 py-6 focus:outline-none focus:ring-2 focus:ring-[#0055A4] focus:ring-inset"
       aria-label="Message history"
       role="log"
       aria-live="polite"
       aria-relevant="additions text"
       tabIndex={0}
+      style={{ overscrollBehavior: 'contain' }}
     >
-      <div className="max-w-[720px] mx-auto flex flex-col gap-6 min-h-full">
+      <div className="max-w-[720px] mx-auto flex flex-col gap-6 flex-1">
         {messages.length === 0 ? (
           <header className="flex-1 flex flex-col items-center justify-center text-center p-6 relative" role="banner">
             <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none" aria-hidden="true">

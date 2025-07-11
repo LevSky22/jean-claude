@@ -70,7 +70,7 @@ export default function ChatPage() {
   ])
 
   return (
-    <>
+    <div className="chat-page-grid">
       <SkipNav targetId="main-content">
         Aller au contenu principal
       </SkipNav>
@@ -88,31 +88,35 @@ export default function ChatPage() {
         onDeleteAll={deleteAllMessages}
       />
       
-      <ChatHeader
-        onNewChat={newChat}
-        onToggleSidebar={toggleSidebar}
-        isSidebarOpen={isSidebarOpen}
-      />
+      {/* Grid row 1: Header (auto height) */}
+      <div>
+        <ChatHeader
+          onNewChat={newChat}
+          onToggleSidebar={toggleSidebar}
+          isSidebarOpen={isSidebarOpen}
+        />
+        <OfflineBanner isOffline={isOffline} />
+      </div>
 
+      {/* Grid row 2: Chat content (1fr - takes remaining space) */}
       <main 
         id="main-content" 
-        className="flex-1 flex flex-col overflow-hidden" 
+        className="overflow-hidden" 
         aria-label="Zone de conversation principale"
         role="main"
       >
-        <OfflineBanner isOffline={isOffline} />
-
         <ChatContainer messages={messages} isStreaming={isStreaming} />
-
-        <div id="chat-input">
-          <ChatInput
-            onSendMessage={sendMessage}
-            isWaiting={isWaiting}
-            disabled={isOffline}
-          />
-          <PrivacyFooter />
-        </div>
       </main>
+
+      {/* Grid row 3: Input (auto height) */}
+      <div id="chat-input">
+        <ChatInput
+          onSendMessage={sendMessage}
+          isWaiting={isWaiting}
+          disabled={isOffline}
+        />
+        <PrivacyFooter />
+      </div>
 
       <RateLimitToast
         isVisible={showRateLimit}
@@ -157,6 +161,6 @@ export default function ChatPage() {
         isWaiting={isWaiting}
         error={error}
       />
-    </>
+    </div>
   )
 }

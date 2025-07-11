@@ -13,7 +13,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "preview": "vite preview",
-    "dev:worker": "wrangler dev --env development",
+    "dev:worker": "wrangler dev --env development --port 3000",
     "deploy": "npm run build:worker && wrangler deploy --env production",
     "deploy:dev": "npm run build:worker && wrangler deploy --env development"
   },

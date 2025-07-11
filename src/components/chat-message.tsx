@@ -52,11 +52,7 @@ export default function ChatMessage({
     }
   }, [message, isBot, isStreaming, streamingSpeed])
 
-  useEffect(() => {
-    if (messageRef.current) {
-      messageRef.current.scrollIntoView({ behavior: 'smooth' })
-    }
-  }, [displayedText])
+  // Removed scrollIntoView - handled by ChatContainer
 
   return (
     <article

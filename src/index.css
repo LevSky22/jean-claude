@@ -1,5 +1,28 @@
 @import "tailwindcss";
 
+/* Prevent document scrolling - only chat container should scroll */
+html, body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+#root {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr;
+}
+
+/* Chat page layout using CSS Grid */
+.chat-page-grid {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+  overflow: hidden;
+}
+
 :root {
   /* French tricolor theme */
   --color-bleu: #0055a4;
@@ -19,6 +42,11 @@ body {
   color: #1f2937;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure no element can cause page scroll */
+* {
+  box-sizing: border-box;
 }
 
 h1, h2, h3, .font-serif {
