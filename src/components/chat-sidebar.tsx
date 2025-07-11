@@ -49,9 +49,9 @@ function SessionItem({ session, isActive, onClick, onDelete }: SessionItemProps)
     if (diffDays === 0) {
       return sessionDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     } else if (diffDays === 1) {
-      return 'Hier'
+      return 'Yesterday'
     } else if (diffDays < 7) {
-      return `${diffDays} jours`
+      return `${diffDays} days ago`
     } else {
       return sessionDate.toLocaleDateString()
     }
@@ -67,7 +67,7 @@ function SessionItem({ session, isActive, onClick, onDelete }: SessionItemProps)
       )}
       onClick={onClick}
       aria-pressed={isActive}
-      aria-label={`Ouvrir la conversation "${session.title}" créée le ${formatDate(session.updatedAt)}`}
+      aria-label={`Open conversation "${session.title}" created on ${formatDate(session.updatedAt)}`}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
@@ -91,7 +91,7 @@ function SessionItem({ session, isActive, onClick, onDelete }: SessionItemProps)
               'text-xs',
               isActive ? 'text-blue-100' : 'text-gray-500'
             )}>
-              {session.messages.length} messages
+              {session.messages.length} message{session.messages.length !== 1 ? 's' : ''}
             </span>
           </div>
         </div>
@@ -118,23 +118,23 @@ function SessionItem({ session, isActive, onClick, onDelete }: SessionItemProps)
                 <AlertDialogTrigger asChild>
                   <button className="w-full px-3 py-2 text-left text-red-600 hover:bg-red-50 flex items-center gap-2 text-sm">
                     <Trash2 className="h-3 w-3" />
-                    Supprimer
+                    Delete
                   </button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Supprimer cette conversation ?</AlertDialogTitle>
+                    <AlertDialogTitle>Delete this conversation?</AlertDialogTitle>
                     <AlertDialogDescription>
-                      Cette action est irréversible. La conversation "{session.title}" sera supprimée définitivement.
+                      This action is irreversible. The conversation "{session.title}" will be permanently deleted.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel onClick={() => setShowMenu(false)}>Annuler</AlertDialogCancel>
+                    <AlertDialogCancel onClick={() => setShowMenu(false)}>Cancel</AlertDialogCancel>
                     <AlertDialogAction
                       onClick={handleDelete}
                       className="bg-[#EF4135] hover:bg-[#EF4135]/90"
                     >
-                      Supprimer
+                      Delete
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
@@ -251,7 +251,7 @@ export default function ChatSidebar({
           isOpen ? 'translate-x-0' : '-translate-x-full'
         )}
         role="complementary"
-        aria-label="Menu des conversations"
+        aria-label="Conversation menu"
         aria-modal="true"
       >
         <div className="flex flex-col h-full">
@@ -264,7 +264,7 @@ export default function ChatSidebar({
               size="sm"
               onClick={onClose}
               className="h-8 w-8 p-0"
-              aria-label="Fermer le menu des conversations"
+              aria-label="Close conversation menu"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </Button>
@@ -280,7 +280,7 @@ export default function ChatSidebar({
               className="w-full bg-[#0055A4] hover:bg-[#0055A4]/90 text-white"
             >
               <Plus className="h-4 w-4 mr-2" />
-              Nouvelle conversation
+              New conversation
             </Button>
           </div>
 
@@ -296,17 +296,17 @@ export default function ChatSidebar({
                 role="status"
                 aria-live="polite"
               >
-                <span aria-hidden="true">Chargement...</span>
-                <span className="sr-only">Chargement des conversations en cours</span>
+                <span aria-hidden="true">Loading...</span>
+                <span className="sr-only">Loading conversations</span>
               </div>
             ) : sessions.length === 0 ? (
               <div className="text-center text-gray-500 py-8" role="status">
                 <MessageCircle className="h-12 w-12 mx-auto mb-4 text-gray-300" aria-hidden="true" />
-                <p className="text-sm">Aucune conversation</p>
-                <p className="text-xs mt-1">Commencez une nouvelle conversation pour la voir apparaître ici</p>
+                <p className="text-sm">No conversations</p>
+                <p className="text-xs mt-1">Start a new conversation to see it appear here</p>
               </div>
             ) : (
-              <ul className="space-y-2" role="list" aria-label="Liste des conversations">
+              <ul className="space-y-2" role="list" aria-label="List of conversations">
                 {sessions.map((session) => (
                   <li key={session.id} role="listitem">
                     <SessionItem
@@ -335,19 +335,19 @@ export default function ChatSidebar({
                     className="w-full text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
-                    Supprimer toutes les conversations
+                    Delete all conversations
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Êtes-vous sûr?</AlertDialogTitle>
+                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                     <AlertDialogDescription>
-                      Cette action est irréversible. Toutes vos conversations avec
-                      Jean-Claude seront supprimées définitivement.
+                      This action is irreversible. All your conversations with
+                      Jean-Claude will be permanently deleted.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Annuler</AlertDialogCancel>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction
                       onClick={() => {
                         onDeleteAll()
@@ -356,7 +356,7 @@ export default function ChatSidebar({
                       }}
                       className="bg-[#EF4135] hover:bg-[#EF4135]/90"
                     >
-                      Oui, tout supprimer
+                      Yes, delete all
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
@@ -364,7 +364,7 @@ export default function ChatSidebar({
             )}
             
             <p className="text-xs text-gray-500 text-center">
-              {sessions.length} conversation{sessions.length !== 1 ? 's' : ''} sauvegardée{sessions.length !== 1 ? 's' : ''}
+              {sessions.length} conversation{sessions.length !== 1 ? 's' : ''} saved
             </p>
           </div>
         </div>

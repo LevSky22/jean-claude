@@ -68,7 +68,7 @@ export default function ChatMessage({
           : 'bg-[#0055A4] text-white self-end rounded-tr-none'
       )}
       role="article"
-      aria-label={isBot ? 'Message de Jean-Claude' : 'Votre message'}
+      aria-label={isBot ? 'Message from Jean-Claude' : 'Your message'}
       aria-live={isBot && isStreaming ? 'polite' : undefined}
       aria-atomic="false"
       tabIndex={-1}
@@ -118,7 +118,7 @@ export default function ChatMessage({
         {isBot && isStreaming && !isComplete && (
           <span 
             className="inline-block w-1 h-4 ml-0.5 bg-gray-400 animate-pulse"
-            aria-label="En cours de saisie"
+            aria-label="Typing"
             role="status"
           ></span>
         )}

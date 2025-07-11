@@ -33,8 +33,8 @@ export default function RateLimitToast({
       <AlertCircle className="h-4 w-4" aria-hidden="true" />
 
       <AlertDescription className="text-white font-medium">
-        <span className="sr-only">Limite de débit atteinte : </span>
-        Doucement, mon ami—too many messages 👀
+        <span className="sr-only">Rate limit reached: </span>
+        Slow down, my friend—too many messages 👀
       </AlertDescription>
     </Alert>
   );

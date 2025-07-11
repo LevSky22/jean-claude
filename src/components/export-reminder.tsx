@@ -29,7 +29,7 @@ export function ExportReminder({ onExport, onDismiss }: ExportReminderProps) {
               onClick={onExport}
               size="sm"
               className="bg-amber-600 hover:bg-amber-700 text-white focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
-              aria-label="Exporter la conversation maintenant"
+              aria-label="Export conversation now"
             >
               <Download className="h-4 w-4 mr-1" aria-hidden="true" />
               Export Now
@@ -39,7 +39,7 @@ export function ExportReminder({ onExport, onDismiss }: ExportReminderProps) {
               size="sm"
               variant="ghost"
               className="text-amber-700 hover:text-amber-800 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
-              aria-label="Reporter l'export à plus tard"
+              aria-label="Export later"
             >
               Later
             </Button>
@@ -50,7 +50,7 @@ export function ExportReminder({ onExport, onDismiss }: ExportReminderProps) {
           size="sm"
           variant="ghost"
           className="text-amber-500 hover:text-amber-600 p-1 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
-          aria-label="Fermer le rappel d'export"
+          aria-label="Close export reminder"
         >
           <X className="h-4 w-4" aria-hidden="true" />
         </Button>

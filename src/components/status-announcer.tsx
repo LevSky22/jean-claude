@@ -16,13 +16,13 @@ export function StatusAnnouncer({ isOffline, isWaiting, error }: StatusAnnouncer
 
   useEffect(() => {
     if (error) {
-      setAnnouncement(`Erreur : ${error}`)
+      setAnnouncement(`Error: ${error}`)
       setPoliteness('assertive')
     } else if (isOffline) {
-      setAnnouncement('Vous êtes maintenant hors ligne. Seuls les transcripts sont disponibles.')
+      setAnnouncement('You are now offline. Only transcripts are available.')
       setPoliteness('assertive')
     } else if (isWaiting) {
-      setAnnouncement('Jean-Claude est en train de réfléchir...')
+      setAnnouncement('Jean-Claude is thinking...')
       setPoliteness('polite')
     } else {
       // Clear announcement when status returns to normal

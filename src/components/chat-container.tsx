@@ -34,9 +34,9 @@ export default function ChatContainer({
     if (messages.length > lastMessageCountRef.current) {
       const newMessage = messages[messages.length - 1]
       if (newMessage && newMessage.isBot) {
-        setLiveMessage('Jean-Claude a répondu')
+        setLiveMessage('Jean-Claude has responded')
       } else if (newMessage && !newMessage.isBot) {
-        setLiveMessage('Votre message a été envoyé')
+        setLiveMessage('Your message has been sent')
       }
     }
     lastMessageCountRef.current = messages.length
@@ -46,7 +46,7 @@ export default function ChatContainer({
     <section 
       ref={containerRef} 
       className="flex-1 overflow-y-auto px-4 py-6 focus:outline-none focus:ring-2 focus:ring-[#0055A4] focus:ring-inset"
-      aria-label="Historique des messages"
+      aria-label="Message history"
       role="log"
       aria-live="polite"
       aria-relevant="additions text"
@@ -59,16 +59,15 @@ export default function ChatContainer({
               <FleurDeLis className="w-64 h-64" aria-hidden="true" />
             </div>
             <h2 className="font-serif text-2xl font-bold text-[#0055A4] mb-4">
-              Oh là là ! Jean-Claude attend vos questions…
+              Oh mon dieu... You are already annoying me... 
+              <br />Go on, ask your questions!
             </h2>
             <p className="text-gray-600 max-w-md">
-              Posez une question à Jean-Claude, votre assistant virtuel
-              français. Toutes vos conversations restent privées dans votre
-              navigateur.
+              Meet Jean-Claude, your charmingly dramatic Parisian that moonlights as an AI chatbot. 🥖
             </p>
           </header>
         ) : (
-          <div role="group" aria-label="Messages de la conversation">
+          <div role="group" aria-label="Conversation messages">
             {messages.map((message) => (
             <ChatMessage
               key={message.id}

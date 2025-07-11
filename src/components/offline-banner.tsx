@@ -17,8 +17,8 @@ export default function OfflineBanner({ isOffline }: OfflineBannerProps) {
       <WifiOff className="h-4 w-4 text-amber-500" aria-hidden="true" />
 
       <AlertDescription className="text-amber-800 font-medium">
-        <span className="sr-only">Attention : </span>
-        Hors-ligne : transcripts only—reconnect to chat.
+        <span className="sr-only">Warning: </span>
+        Offline: transcripts only—reconnect to chat.
       </AlertDescription>
     </Alert>
   )
