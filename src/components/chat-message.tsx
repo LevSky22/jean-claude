@@ -20,6 +20,28 @@ export default function ChatMessage({
   const messageRef = useRef<HTMLDivElement>(null)
   const lastAnnouncedRef = useRef('')
 
+  // Adaptive streaming speed based on character type
+  const getAdaptiveSpeed = (char: string, baseSpeed: number) => {
+    if (!char) return baseSpeed
+    
+    // Slower for punctuation to create natural pauses
+    if (['.', '!', '?', ';', ':'].includes(char)) {
+      return baseSpeed * 3
+    }
+    
+    // Slightly slower for commas
+    if (char === ',') {
+      return baseSpeed * 1.5
+    }
+    
+    // Faster for spaces
+    if (char === ' ') {
+      return baseSpeed * 0.5
+    }
+    
+    return baseSpeed
+  }
+
   useEffect(() => {
     if (isStreaming && isBot) {
       setDisplayedText('')
@@ -27,7 +49,9 @@ export default function ChatMessage({
       lastAnnouncedRef.current = ''
 
       let index = 0
-      const interval = setInterval(() => {
+      let timeoutId: number
+
+      const typeNextChar = () => {
         if (index < message.length) {
           setDisplayedText((prev) => {
             const newText = prev + message[index]
@@ -38,14 +62,24 @@ export default function ChatMessage({
             }
             return newText
           })
+          
+          const currentChar = message[index]
           index++
+          
+          // Schedule next character with adaptive speed
+          const nextDelay = getAdaptiveSpeed(currentChar, streamingSpeed)
+          timeoutId = setTimeout(typeNextChar, nextDelay)
         } else {
-          clearInterval(interval)
           setIsComplete(true)
         }
-      }, streamingSpeed)
+      }
 
-      return () => clearInterval(interval)
+      // Start typing
+      typeNextChar()
+
+      return () => {
+        if (timeoutId) clearTimeout(timeoutId)
+      }
     } else {
       setDisplayedText(message)
       setIsComplete(true)
@@ -59,9 +93,11 @@ export default function ChatMessage({
       ref={messageRef}
       className={cn(
         'py-2 px-4 md:py-3 md:px-5 rounded-2xl max-w-[85%] md:max-w-[75%] shadow-sm hover:shadow-md transition-all duration-200',
+        'animate-in slide-in-from-bottom-2 fade-in-0 duration-300',
         isBot
-          ? 'bg-gray-100 text-gray-800 self-start rounded-tl-none'
-          : 'bg-[#0055A4] text-white self-end rounded-tr-none'
+          ? 'bg-gray-100 text-gray-800 self-start rounded-tl-none slide-in-from-left-2'
+          : 'bg-[#0055A4] text-white self-end rounded-tr-none slide-in-from-right-2',
+        isBot && isStreaming && !isComplete && 'animate-pulse'
       )}
       role="article"
       aria-label={isBot ? 'Message from Jean-Claude' : 'Your message'}
@@ -113,10 +149,14 @@ export default function ChatMessage({
         )}
         {isBot && isStreaming && !isComplete && (
           <span 
-            className="inline-block w-1 h-4 ml-0.5 bg-gray-400 animate-pulse"
-            aria-label="Typing"
+            className="inline-flex items-center ml-1 gap-0.5"
+            aria-label="Jean-Claude is typing"
             role="status"
-          ></span>
+          >
+            <span className="w-1 h-1 bg-[#0055A4] rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+            <span className="w-1 h-1 bg-[#0055A4] rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+            <span className="w-1 h-1 bg-[#0055A4] rounded-full animate-bounce"></span>
+          </span>
         )}
       </div>
     </article>
