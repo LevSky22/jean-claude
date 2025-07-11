@@ -59,12 +59,12 @@ export default function ChatContainer({
       tabIndex={0}
       style={{ overscrollBehavior: 'contain' }}
     >
-      <div className="max-w-[600px] mx-auto flex flex-col gap-2 flex-1">
-        {messages.length === 0 ? (
-          <header className="flex-1 flex flex-col items-center justify-center text-center p-6 relative" role="banner">
-            <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none" aria-hidden="true">
-              <FleurDeLis className="w-64 h-64" aria-hidden="true" />
-            </div>
+      {messages.length === 0 ? (
+        <div className="flex flex-col items-center justify-center h-full min-h-[60vh] text-center p-6 relative">
+          <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none" aria-hidden="true">
+            <FleurDeLis className="w-64 h-64" aria-hidden="true" />
+          </div>
+          <header role="banner" className="relative z-10">
             <h2 className="font-serif text-2xl font-bold text-[#0055A4] mb-4">
               Oh mon dieu... You are already annoying me... 
               <br />Go on, ask your questions!
@@ -73,7 +73,9 @@ export default function ChatContainer({
               Meet Jean-Claude, your charmingly dramatic Parisian that moonlights as an AI chatbot. 🥖
             </p>
           </header>
-        ) : (
+        </div>
+      ) : (
+        <div className="max-w-[600px] mx-auto flex flex-col gap-2">
           <div role="group" aria-label="Conversation messages" className="flex flex-col space-y-1">
             {messages.map((message) => (
             <ChatMessage
@@ -84,8 +86,8 @@ export default function ChatContainer({
             />
             ))}
           </div>
-        )}
-      </div>
+        </div>
+      )}
       
       {/* Live announcer for screen readers */}
       <LiveAnnouncer message={liveMessage} politeness="polite" />
