@@ -4,7 +4,8 @@
  */
 
 export function runAccessibilityChecks() {
-  if (process.env.NODE_ENV !== 'development') return;
+  // @ts-expect-error import.meta.env typing issue in dev builds
+  if (import.meta.env?.PROD) return;
 
   console.log('🔍 Running accessibility checks...');
 

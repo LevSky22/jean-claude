@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 )
 
 // Run accessibility checks in development
-// @ts-ignore
+// @ts-expect-error import.meta.env typing issue in dev builds
 if (import.meta.env?.DEV) {
   runAccessibilityChecks()
 }

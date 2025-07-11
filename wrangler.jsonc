@@ -1,0 +1,28 @@
+{
+  "$schema": "https://schemas.cloudflare.com/wrangler/3.0.0/config.schema.json",
+  "name": "jean-claude",
+  "main": "./dist/_worker.js",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS"
+  },
+  "compatibility_date": "2025-01-11",
+  "compatibility_flags": ["nodejs_compat"],
+  
+  "env": {
+    "development": {
+      "name": "jean-claude-dev"
+    },
+    "production": {
+      "name": "jean-claude-prod"
+    }
+  },
+  
+  "vars": {
+    "ENVIRONMENT": "production"
+  },
+  
+  "build": {
+    "command": "npm run build:worker"
+  }
+}

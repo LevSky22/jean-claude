@@ -28,7 +28,7 @@ class ApiService {
   private baseUrl = '/api'
 
   async sendMessage(message: string, conversationHistory: Message[] = []): Promise<ReadableStream<Uint8Array>> {
-    const requestBody: any = {
+    const requestBody: { message: string; conversationHistory: Message[] } = {
       message,
       conversationHistory
     }
@@ -104,6 +104,7 @@ export async function processStreamingResponse(
   let buffer = ''
 
   try {
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       const { done, value } = await reader.read()
       

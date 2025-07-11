@@ -10,7 +10,7 @@ interface ChatHeaderProps {
 }
 
 export default function ChatHeader({
-  onNewChat: _onNewChat,
+  onNewChat,
   onToggleSidebar,
   isSidebarOpen,
 }: ChatHeaderProps) {
@@ -49,7 +49,7 @@ export default function ChatHeader({
         <Button
           variant="ghost"
           size="sm"
-          onClick={onToggleSidebar}
+          onClick={onNewChat}
           className="hidden md:flex items-center gap-1 text-[#0055A4] hover:text-[#0055A4] hover:bg-blue-50 hover:shadow-sm hover:scale-105 active:scale-100 transition-all duration-200 focus:ring-2 focus:ring-[#0055A4] focus:ring-offset-2"
           aria-label="Ouvrir les conversations"
         >

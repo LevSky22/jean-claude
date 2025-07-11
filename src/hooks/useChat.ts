@@ -238,7 +238,7 @@ export function useChat(): UseChatReturn {
       setIsWaiting(false)
       setError(err instanceof Error ? err.message : 'Unknown error occurred')
     }
-  }, [messages, isWaiting, isOffline, currentTranscript])
+  }, [messages, isWaiting, isOffline, currentTranscript, currentSessionId])
 
   const handleMockResponse = useCallback((botMessageId: string) => {
     // Mock Jean-Claude responses for development (matching the enhanced personality)

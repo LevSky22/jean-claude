@@ -31,8 +31,9 @@ export function LiveAnnouncer({
 
   useEffect(() => {
     return () => {
-      if (clearOnUnmount && announcerRef.current) {
-        announcerRef.current.textContent = ''
+      const element = announcerRef.current
+      if (clearOnUnmount && element) {
+        element.textContent = ''
       }
     }
   }, [clearOnUnmount])
