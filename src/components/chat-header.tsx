@@ -21,7 +21,7 @@ export default function ChatHeader({
         variant="ghost"
         size="sm"
         onClick={onToggleSidebar}
-        className="absolute left-4 h-8 w-8 p-0 text-[#0055A4] hover:text-[#0055A4] hover:bg-blue-50 hover:shadow-sm hover:scale-105 active:scale-100 transition-all duration-200 focus:ring-2 focus:ring-[#0055A4] focus:ring-offset-2"
+        className="absolute left-4 h-8 w-8 p-0 text-[#0055A4] hover:text-[#0055A4] hover:bg-blue-50 hover:shadow-sm hover:scale-105 active:scale-100 transition-all duration-200 focus-visible:ring-0 focus-visible:ring-offset-0"
         aria-label={isSidebarOpen ? "Fermer le menu des conversations" : "Ouvrir le menu des conversations"}
         aria-expanded={isSidebarOpen}
         aria-haspopup="true"
@@ -31,12 +31,12 @@ export default function ChatHeader({
       
       <Link 
         to="/chat" 
-        className="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-[#0055A4] focus:ring-offset-2 rounded-md"
+        className="flex items-center gap-2 focus:outline-none rounded-md"
         aria-label="Retour à l'accueil de Jean-Claude"
       >
         <FleurDeLis className="h-6 w-6" aria-hidden="true" />
 
-        <h1 className="font-serif text-[22px] md:text-[28px] font-bold text-[#0055A4]">
+        <h1 className="font-serif text-[22px] md:text-[28px] font-bold text-[#0055A4] select-text">
           Jean-Claude
         </h1>
       </Link>

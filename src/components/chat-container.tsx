@@ -51,7 +51,7 @@ export default function ChatContainer({
   return (
     <section 
       ref={containerRef} 
-      className="h-full overflow-y-auto px-4 py-6 bg-white focus:outline-none focus:ring-2 focus:ring-[#0055A4] focus:ring-inset"
+      className="h-full overflow-y-auto px-4 py-6 bg-white focus:outline-none"
       aria-label="Message history"
       role="log"
       aria-live="polite"
@@ -65,11 +65,11 @@ export default function ChatContainer({
             <FleurDeLis className="w-64 h-64" aria-hidden="true" />
           </div>
           <header role="banner" className="relative z-10">
-            <h2 className="font-serif text-2xl font-bold text-[#0055A4] mb-4">
-              Oh mon dieu... You are already annoying me... 
+            <h2 className="font-serif text-2xl font-bold text-[#0055A4] mb-4 select-text">
+              Oh mon dieu... Another pesky tourist... 
               <br />Go on, ask your questions!
             </h2>
-            <p className="text-gray-600 max-w-md">
+            <p className="text-gray-600 max-w-md select-text">
               Meet Jean-Claude, your charmingly dramatic Parisian that moonlights as an AI chatbot. 🥖
             </p>
           </header>

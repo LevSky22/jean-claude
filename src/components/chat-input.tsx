@@ -69,7 +69,7 @@ export default function ChatInput({
     >
       <form
         onSubmit={handleSubmit}
-        className="max-w-[720px] mx-auto flex items-end gap-2"
+        className="max-w-[720px] mx-auto flex items-center gap-2"
         role="form"
         aria-label="Send message form"
       >
@@ -84,7 +84,7 @@ export default function ChatInput({
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Type your question (or elegant complaint)…"
-            className="min-h-[50px] max-h-[150px] rounded-full px-4 py-3 resize-none border-gray-200 focus-visible:ring-[#0055A4] focus-visible:ring-2"
+            className="min-h-[50px] max-h-[150px] rounded-full px-4 py-3 resize-none border-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0055A4] focus-visible:ring-offset-2"
             disabled={disabled}
             aria-describedby={disabled ? "input-disabled-help" : undefined}
             aria-invalid={false}
@@ -99,7 +99,7 @@ export default function ChatInput({
         <Button
           type="submit"
           disabled={!message.trim() || isWaiting || disabled}
-          className={`rounded-full h-[50px] w-[50px] p-0 bg-[#0055A4] hover:bg-[#EF4135] transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 active:scale-100 active:shadow-md focus:ring-2 focus:ring-[#0055A4] focus:ring-offset-2`}
+          className={`rounded-full h-[50px] w-[50px] p-0 bg-[#0055A4] hover:bg-[#EF4135] transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 active:scale-100 active:shadow-md focus-visible:ring-0 focus-visible:ring-offset-0`}
           aria-label={isWaiting ? "Sending..." : "Send message"}
           aria-describedby="send-button-help"
         >
@@ -111,7 +111,7 @@ export default function ChatInput({
               <span className="sr-only">Loading</span>
             </div>
           ) : (
-            <SendIcon className="h-5 w-5" aria-hidden="true" />
+            <SendIcon className="h-5 w-5 text-white" aria-hidden="true" />
           )}
         </Button>
         <div id="send-button-help" className="sr-only">

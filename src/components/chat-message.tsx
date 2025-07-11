@@ -64,7 +64,7 @@ export default function ChatMessage({
           : 'right-[-4px] bg-[#0055A4]'
       )}></div>
       
-      <div className="max-w-none break-words font-sans leading-tight">
+      <div className="max-w-none break-words font-sans leading-tight select-text">
         {isBot ? (
           <ReactMarkdown
             components={{

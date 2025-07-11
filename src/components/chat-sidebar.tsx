@@ -81,7 +81,7 @@ function SessionItem({ session, isActive, onClick, onDelete }: SessionItemProps)
     <div className="relative">
       <button
         className={cn(
-          'group relative p-3 rounded-lg transition-all duration-200 border w-full text-left focus:outline-none focus:ring-2 focus:ring-[#0055A4] focus:ring-offset-2',
+          'group relative p-3 rounded-lg transition-all duration-200 border w-full text-left focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0',
           isActive 
             ? 'bg-[#0055A4] text-white border-[#0055A4] shadow-md' 
             : 'bg-white hover:bg-gray-50 border-gray-200 hover:shadow-md hover:border-gray-300'
@@ -103,7 +103,7 @@ function SessionItem({ session, isActive, onClick, onDelete }: SessionItemProps)
           <div className="flex items-center gap-2 mb-1">
             <MessageCircle className="h-4 w-4 flex-shrink-0" />
             <h3 className={cn(
-              'font-medium text-sm truncate',
+              'font-medium text-sm truncate select-text',
               isActive ? 'text-white' : 'text-gray-900'
             )}>
               {session.title}
@@ -317,13 +317,13 @@ export default function ChatSidebar({
         <div className="flex flex-col h-full">
           {/* Header */}
           <header className="flex items-center justify-between p-4 border-b border-gray-200 bg-white">
-            <h2 id="sidebar-title" className="font-semibold text-gray-900">Conversations</h2>
+            <h2 id="sidebar-title" className="font-semibold text-gray-900 select-text">Conversations</h2>
             <Button
               ref={closeButtonRef}
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="h-8 w-8 p-0"
+              className="h-8 w-8 p-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
               aria-label="Hide conversation menu"
             >
               <ChevronLeft className="h-4 w-4" aria-hidden="true" />
@@ -359,8 +359,8 @@ export default function ChatSidebar({
             ) : sessions.length === 0 ? (
               <div className="text-center text-gray-500 py-8" role="status">
                 <MessageCircle className="h-12 w-12 mx-auto mb-4 text-gray-300" aria-hidden="true" />
-                <p className="text-sm">No conversations</p>
-                <p className="text-xs mt-1">Start a new conversation to see it appear here</p>
+                <p className="text-sm select-text">No conversations</p>
+                <p className="text-xs mt-1 select-text">Start a new conversation to see it appear here</p>
               </div>
             ) : (
               <ul className="space-y-2" role="list" aria-label="List of conversations">
@@ -423,7 +423,7 @@ export default function ChatSidebar({
               </>
             )}
             
-            <p className="text-xs text-gray-500 text-center">
+            <p className="text-xs text-gray-500 text-center select-text">
               {sessions.length} conversation{sessions.length !== 1 ? 's' : ''} saved
             </p>
           </div>
