@@ -18,16 +18,26 @@ export default function ChatMessage({
   const [displayedText, setDisplayedText] = useState('')
   const [isComplete, setIsComplete] = useState(!isStreaming)
   const messageRef = useRef<HTMLDivElement>(null)
+  const lastAnnouncedRef = useRef('')
 
   useEffect(() => {
     if (isStreaming && isBot) {
       setDisplayedText('')
       setIsComplete(false)
+      lastAnnouncedRef.current = ''
 
       let index = 0
       const interval = setInterval(() => {
         if (index < message.length) {
-          setDisplayedText((prev) => prev + message[index])
+          setDisplayedText((prev) => {
+            const newText = prev + message[index]
+            // Announce complete sentences to screen readers
+            const lastSentenceEnd = newText.lastIndexOf('.')
+            if (lastSentenceEnd > lastAnnouncedRef.current.length) {
+              lastAnnouncedRef.current = newText.substring(0, lastSentenceEnd + 1)
+            }
+            return newText
+          })
           index++
         } else {
           clearInterval(interval)
@@ -61,6 +71,7 @@ export default function ChatMessage({
       aria-label={isBot ? 'Message de Jean-Claude' : 'Votre message'}
       aria-live={isBot && isStreaming ? 'polite' : undefined}
       aria-atomic="false"
+      tabIndex={-1}
     >
       <div className="prose prose-sm max-w-none break-words">
         {isBot ? (

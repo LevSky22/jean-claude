@@ -241,15 +241,21 @@ export function useChat(): UseChatReturn {
   }, [messages, isWaiting, isOffline, currentTranscript])
 
   const handleMockResponse = useCallback((botMessageId: string) => {
-    // Mock Jean-Claude responses for development (matching the personality from docs/jeanclaude.md)
+    // Mock Jean-Claude responses for development (matching the enhanced personality)
     const botResponses = [
-      "Oh là là ! Another question—mon café grows cold, bof. But enfin, I shall assist you anyway. *dramatic Gallic sigh*",
-      "Euh... ben écoute, that's quite the puzzle, hein? Like trying to explain Proust to a pigeon. But du coup, let me enlighten you...",
-      "Dis donc ! You really want to challenge Jean-Claude today? Très bien, I accept—though my cigarette protests this interruption.",
-      "Mince alors ! Such curiosity... it reminds me of a conversation I overheard at Café de Flore—pretentious, naturally, but enlightening. Bref...",
-      "Pff... another task for the grand Jean-Claude. *eye roll* But quand même, I suppose I can spare a moment from my existential brooding.",
-      "Tiens ! That's actually intriguing—unlike most requests I receive. Bon, consider yourself fortunate that I'm in a generous mood today.",
-      "Hein ? You seek wisdom from moi? Ouf ! Well, I suppose someone must illuminate the masses. Du coup, here's what you need to know...",
+      "*adjusts scarf thoughtfully*\n\nAh, *bonjour*! I was just contemplating Sartre's concept of radical freedom over my morning café. What intellectual adventure brings you to Jean-Claude today? ☕",
+      
+      "*dramatic pause*\n\nAnother question to interrupt my afternoon contemplation? Like Proust's madeleine, your curiosity awakens something profound. *Enfin*, let me share some wisdom from the depths of Parisian intellect... 🎭",
+      
+      "*swirls imaginary glass of Bordeaux*\n\nAh, you seek answers! How delightfully... pedestrian. But *quand même*, I suppose even Voltaire had to explain philosophy to the masses. *Bref*, here's what you need to know... 🍷",
+      
+      "*sighs dramatically*\n\nAnother digital puzzle? Like untangling the complexities of Godard's cinematography, but with more semicolons. *Du coup*, let me guide you through this with the patience of a Sorbonne professor... 📚",
+      
+      "*lights cigarette thoughtfully*\n\nYou know, this reminds me of a conversation I overheard at Café de Flore—pretentious, naturally, but enlightening. The bourgeoisie discussing art while missing its essence entirely. *Tant pis*, I'll illuminate what they could not... 🎨",
+      
+      "*adjusts beret with theatrical flair*\n\nTiens ! Such curiosity... it's almost... refreshing. Like finding a decent espresso outside of the 6th arrondissement. *Carrément*, you've earned my attention today. 💭",
+      
+      "*dramatic Gallic shrug*\n\nAnother task for the grand Jean-Claude? *Pfff...* But you know what? Your persistence amuses me—like Camus' absurd hero pushing that boulder. *Allez*, let's solve this together... 😮‍💨",
     ]
 
     const randomResponse = botResponses[Math.floor(Math.random() * botResponses.length)]

@@ -6,11 +6,13 @@ import FleurDeLis from '@/components/fleur-de-lis'
 interface ChatHeaderProps {
   onNewChat: () => void
   onToggleSidebar: () => void
+  isSidebarOpen: boolean
 }
 
 export default function ChatHeader({
   onNewChat: _onNewChat,
   onToggleSidebar,
+  isSidebarOpen,
 }: ChatHeaderProps) {
   return (
     <header 
@@ -23,8 +25,8 @@ export default function ChatHeader({
           size="sm"
           onClick={onToggleSidebar}
           className="h-8 w-8 p-0 text-[#0055A4] hover:text-[#0055A4] hover:bg-blue-50 hover:shadow-sm hover:scale-105 active:scale-100 transition-all duration-200 focus:ring-2 focus:ring-[#0055A4] focus:ring-offset-2"
-          aria-label="Ouvrir le menu des conversations"
-          aria-expanded="false"
+          aria-label={isSidebarOpen ? "Fermer le menu des conversations" : "Ouvrir le menu des conversations"}
+          aria-expanded={isSidebarOpen}
           aria-haspopup="true"
         >
           <Menu className="h-5 w-5" aria-hidden="true" />

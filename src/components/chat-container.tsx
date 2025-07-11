@@ -1,6 +1,7 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import ChatMessage from '@/components/chat-message'
 import FleurDeLis from '@/components/fleur-de-lis'
+import { LiveAnnouncer } from '@/components/live-announcer'
 
 interface Message {
   id: string
@@ -19,6 +20,8 @@ export default function ChatContainer({
   isStreaming = false,
 }: ChatContainerProps) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const [liveMessage, setLiveMessage] = useState('')
+  const lastMessageCountRef = useRef(0)
 
   useEffect(() => {
     if (containerRef.current) {
@@ -26,19 +29,34 @@ export default function ChatContainer({
     }
   }, [messages])
 
+  // Announce new messages to screen readers
+  useEffect(() => {
+    if (messages.length > lastMessageCountRef.current) {
+      const newMessage = messages[messages.length - 1]
+      if (newMessage && newMessage.isBot) {
+        setLiveMessage('Jean-Claude a répondu')
+      } else if (newMessage && !newMessage.isBot) {
+        setLiveMessage('Votre message a été envoyé')
+      }
+    }
+    lastMessageCountRef.current = messages.length
+  }, [messages])
+
   return (
-    <div 
+    <section 
       ref={containerRef} 
-      className="flex-1 overflow-y-auto px-4 py-6"
+      className="flex-1 overflow-y-auto px-4 py-6 focus:outline-none focus:ring-2 focus:ring-[#0055A4] focus:ring-inset"
       aria-label="Historique des messages"
       role="log"
       aria-live="polite"
+      aria-relevant="additions text"
+      tabIndex={0}
     >
       <div className="max-w-[720px] mx-auto flex flex-col gap-6 min-h-full">
         {messages.length === 0 ? (
-          <div className="flex-1 flex flex-col items-center justify-center text-center p-6 relative">
-            <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
-              <FleurDeLis className="w-64 h-64" />
+          <header className="flex-1 flex flex-col items-center justify-center text-center p-6 relative" role="banner">
+            <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none" aria-hidden="true">
+              <FleurDeLis className="w-64 h-64" aria-hidden="true" />
             </div>
             <h2 className="font-serif text-2xl font-bold text-[#0055A4] mb-4">
               Oh là là ! Jean-Claude attend vos questions…
@@ -48,18 +66,23 @@ export default function ChatContainer({
               français. Toutes vos conversations restent privées dans votre
               navigateur.
             </p>
-          </div>
+          </header>
         ) : (
-          messages.map((message) => (
+          <div role="group" aria-label="Messages de la conversation">
+            {messages.map((message) => (
             <ChatMessage
               key={message.id}
               message={message.text}
               isBot={message.isBot}
               isStreaming={message.isStreaming && isStreaming}
             />
-          ))
+            ))}
+          </div>
         )}
       </div>
-    </div>
+      
+      {/* Live announcer for screen readers */}
+      <LiveAnnouncer message={liveMessage} politeness="polite" />
+    </section>
   )
 }

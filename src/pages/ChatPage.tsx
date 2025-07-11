@@ -6,7 +6,11 @@ import OfflineBanner from '@/components/offline-banner'
 import RateLimitToast from '@/components/rate-limit-toast'
 import { ExportReminder } from '@/components/export-reminder'
 import SkipNav from '@/components/skip-nav'
+import { KeyboardShortcutsDialog } from '@/components/keyboard-shortcuts-dialog'
+import { StatusAnnouncer } from '@/components/status-announcer'
+import PrivacyFooter from '@/components/privacy-footer'
 import { useChat } from '@/hooks/useChat'
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
 
 export default function ChatPage() {
   const {
@@ -31,6 +35,40 @@ export default function ChatPage() {
     closeSidebar,
   } = useChat()
 
+  // Keyboard shortcuts
+  useKeyboardShortcuts([
+    {
+      key: 'n',
+      ctrlKey: true,
+      action: newChat,
+      description: 'Nouvelle conversation',
+    },
+    {
+      key: 'e',
+      ctrlKey: true,
+      action: exportMessages,
+      description: 'Exporter la conversation',
+    },
+    {
+      key: 'b',
+      ctrlKey: true,
+      action: toggleSidebar,
+      description: 'Basculer la barre latérale',
+    },
+    {
+      key: '/',
+      ctrlKey: true,
+      action: () => {
+        // Focus the chat input
+        const input = document.getElementById('chat-message-input')
+        if (input) {
+          input.focus()
+        }
+      },
+      description: 'Focus sur la zone de saisie',
+    },
+  ])
+
   return (
     <>
       <SkipNav targetId="main-content">
@@ -53,6 +91,7 @@ export default function ChatPage() {
       <ChatHeader
         onNewChat={newChat}
         onToggleSidebar={toggleSidebar}
+        isSidebarOpen={isSidebarOpen}
       />
 
       <main 
@@ -71,6 +110,7 @@ export default function ChatPage() {
             isWaiting={isWaiting}
             disabled={isOffline}
           />
+          <PrivacyFooter />
         </div>
       </main>
 
@@ -87,9 +127,17 @@ export default function ChatPage() {
       )}
 
       {error && (
-        <div role="alert" className="fixed bottom-4 left-4 right-4 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg shadow-lg">
+        <div 
+          role="alert" 
+          aria-live="assertive"
+          aria-atomic="true"
+          className="fixed bottom-4 left-4 right-4 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg shadow-lg"
+        >
           <div className="flex justify-between items-center">
-            <span>{error}</span>
+            <span>
+              <span className="sr-only">Erreur : </span>
+              {error}
+            </span>
             <button
               onClick={dismissError}
               className="text-red-600 hover:text-red-800 font-bold text-lg"
@@ -100,6 +148,15 @@ export default function ChatPage() {
           </div>
         </div>
       )}
+
+      <KeyboardShortcutsDialog />
+      
+      {/* Status announcer for screen readers */}
+      <StatusAnnouncer 
+        isOffline={isOffline}
+        isWaiting={isWaiting}
+        error={error}
+      />
     </>
   )
 }

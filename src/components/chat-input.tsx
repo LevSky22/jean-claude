@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { SendIcon } from 'lucide-react'
+import { LiveAnnouncer } from '@/components/live-announcer'
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void
@@ -16,12 +17,15 @@ export default function ChatInput({
 }: ChatInputProps) {
   const [message, setMessage] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const [statusMessage, setStatusMessage] = useState('')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (message.trim() && !isWaiting && !disabled) {
       onSendMessage(message)
       setMessage('')
+      // Keep focus on the input after sending
+      textareaRef.current?.focus()
     }
   }
 
@@ -39,6 +43,24 @@ export default function ChatInput({
       textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 150)}px`
     }
   }, [message])
+
+  // Focus management when disabled state changes
+  useEffect(() => {
+    if (!disabled && textareaRef.current) {
+      textareaRef.current.focus()
+    }
+  }, [disabled])
+
+  // Announce status changes
+  useEffect(() => {
+    if (isWaiting) {
+      setStatusMessage('Envoi du message en cours...')
+    } else if (disabled) {
+      setStatusMessage('La saisie est désactivée car vous êtes hors ligne')
+    } else {
+      setStatusMessage('')
+    }
+  }, [isWaiting, disabled])
 
   return (
     <section 
@@ -82,10 +104,11 @@ export default function ChatInput({
           aria-describedby="send-button-help"
         >
           {isWaiting ? (
-            <div className="flex items-center justify-center gap-0.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-white animate-bounce [animation-delay:-0.3s]"></div>
-              <div className="w-1.5 h-1.5 rounded-full bg-white animate-bounce [animation-delay:-0.15s]"></div>
-              <div className="w-1.5 h-1.5 rounded-full bg-white animate-bounce"></div>
+            <div className="flex items-center justify-center gap-0.5" role="status" aria-label="Envoi en cours">
+              <div className="w-1.5 h-1.5 rounded-full bg-white animate-bounce [animation-delay:-0.3s]" aria-hidden="true"></div>
+              <div className="w-1.5 h-1.5 rounded-full bg-white animate-bounce [animation-delay:-0.15s]" aria-hidden="true"></div>
+              <div className="w-1.5 h-1.5 rounded-full bg-white animate-bounce" aria-hidden="true"></div>
+              <span className="sr-only">Chargement en cours</span>
             </div>
           ) : (
             <SendIcon className="h-5 w-5" aria-hidden="true" />
@@ -95,6 +118,9 @@ export default function ChatInput({
           Appuyez sur Entrée ou cliquez pour envoyer votre message
         </div>
       </form>
+      
+      {/* Live announcer for status changes */}
+      <LiveAnnouncer message={statusMessage} politeness="assertive" />
     </section>
   )
 }
