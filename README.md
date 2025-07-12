@@ -165,7 +165,10 @@ jean-claude/
 │   └── main.tsx           # React app entry point
 ├── public/                 # Static assets
 │   ├── fleur-de-lis.png   # Favicon
-│   └── manifest.json      # PWA manifest
+│   └── jean-claude.png    # Jean-Claude character artwork
+├── docs/                   # Project documentation
+│   ├── prd.md             # Product Requirements Document
+│   └── jeanclaude.md      # Jean-Claude's system prompt
 ├── dist/                   # Build output
 ├── wrangler.jsonc          # Workers configuration
 ├── deploy-worker.sh        # Deployment script
@@ -173,6 +176,13 @@ jean-claude/
 ├── tsconfig.json          # TypeScript config
 └── vite.config.ts         # Vite build config
 ```
+
+## 📚 Documentation
+
+### Core Documentation Files
+
+- **[📋 Product Requirements Document (PRD)](docs/prd.md)**: Complete technical specification, architecture decisions, functional/non-functional requirements, user stories, and implementation milestones
+- **[🎭 Jean-Claude System Prompt](docs/jeanclaude.md)**: The complete AI personality definition that makes Jean-Claude the brilliantly sassy Parisian critic - includes mannerisms, vocabulary, interaction style, and example responses
 
 ## 🎭 Jean-Claude's Personality
 
@@ -322,7 +332,7 @@ This project was built using a comprehensive stack of modern development tools:
 - **[Mistral AI](https://mistral.ai/)**: Primary LLM API for Jean-Claude's responses
 - **[Gemini Pro 2.5](https://ai.google.dev/)**: System prompt generation and codebase review
 - **[OpenAI o3](https://openai.com/)**: PRD generation assistance
-- **[Perplexity MCP w/ Sonar Pro](https://github.com/modelcontextprotocol/servers/tree/main/src/perplexity)**: Dependency validation and error resolution
+- **[Perplexity MCP w/ Sonar Pro](https://github.com/ppl-ai/modelcontextprotocol/tree/main)**: Dependency validation and error resolution
 
 ### **Infrastructure & Deployment**
 - **[Cloudflare Workers](https://workers.cloudflare.com/)**: Serverless deployment platform
