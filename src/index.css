@@ -146,15 +146,6 @@ input::placeholder, textarea::placeholder {
   }
 }
 
-/* Gentle breathing effect for streaming messages */
-@keyframes breathe {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.005);
-  }
-}
 
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {

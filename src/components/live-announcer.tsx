@@ -49,15 +49,3 @@ export function LiveAnnouncer({
   )
 }
 
-/**
- * Hook to manage live announcements
- */
-export function useLiveAnnouncer() {
-  const announce = (message: string, politeness: 'polite' | 'assertive' = 'polite') => {
-    // This would typically be connected to a global state management system
-    // For now, we'll just return the props needed for the LiveAnnouncer component
-    return { message, politeness }
-  }
-
-  return { announce }
-}
