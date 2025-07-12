@@ -173,7 +173,7 @@ function SessionItem({ session, isActive, onClick, onDelete }: SessionItemProps)
             </Button>
             <Button
               onClick={handleDelete}
-              className="bg-[#EF4135] hover:bg-[#EF4135]/90"
+              className="bg-[#EF4135] hover:bg-[#EF4135]/90 text-white"
             >
               Delete
             </Button>
@@ -413,7 +413,7 @@ export default function ChatSidebar({
                           setSessions([])
                           setShowDeleteAllDialog(false)
                         }}
-                        className="bg-[#EF4135] hover:bg-[#EF4135]/90"
+                        className="bg-[#EF4135] hover:bg-[#EF4135]/90 text-white"
                       >
                         Yes, delete all
                       </Button>
