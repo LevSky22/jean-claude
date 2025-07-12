@@ -39,7 +39,7 @@ export default function ChatMessage({
     <article
       ref={messageRef}
       className={cn(
-        'relative max-w-[75%] md:max-w-[65%] animate-in slide-in-from-bottom-2 fade-in-0 duration-300',
+        'relative max-w-[75%] md:max-w-[65%] animate-in slide-in-from-bottom-2 fade-in-0 duration-300 focus:outline-none',
         isBot ? 'self-start slide-in-from-left-2' : 'self-end slide-in-from-right-2'
       )}
       role="article"
@@ -50,7 +50,7 @@ export default function ChatMessage({
     >
       {/* Message bubble */}
       <div className={cn(
-        'px-4 py-2 rounded-[1.25rem] relative z-10',
+        'px-4 py-2 rounded-[1.25rem] relative z-10 focus:outline-none',
         isBot
           ? 'bg-[#e5e5ea] text-black rounded-bl-md'
           : 'bg-[#0055A4] text-white rounded-br-md'

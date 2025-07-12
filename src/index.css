@@ -94,6 +94,12 @@ a, button, input, textarea, [role="button"] {
   outline-offset: 2px;
 }
 
+/* Remove focus outline from chat messages */
+article[role="article"]:focus,
+article[role="article"]:focus-visible {
+  outline: none !important;
+}
+
 /* Ensure proper color contrast for text */
 .text-gray-500 {
   color: #6b7280; /* Ensures 4.5:1 contrast ratio on white */

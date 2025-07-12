@@ -68,10 +68,7 @@ export function useChat(): UseChatReturn {
   }, [])
 
   const sendMessage = useCallback(async (text: string) => {
-    console.log('sendMessage called with:', text)
-    console.log('Current state:', { isWaiting, isStreaming, isOffline, messagesCount: messages.length })
     if (!text.trim() || isWaiting || isOffline) {
-      console.log('sendMessage early return:', { text: text.trim(), isWaiting, isOffline })
       return
     }
 
@@ -119,7 +116,7 @@ export function useChat(): UseChatReturn {
         }
       }
     } catch (err) {
-      console.error('Failed to save message to transcript:', err)
+      // Failed to save message to transcript
     }
 
     // Check for rate limiting (simple client-side check)
@@ -154,7 +151,6 @@ export function useChat(): UseChatReturn {
         await processStreamingResponse(
           stream,
           (chunk: string) => {
-            console.log('Received chunk:', chunk)
             fullResponse += chunk
             // Update message text for real-time display
             setMessages(prev => 
@@ -195,11 +191,10 @@ export function useChat(): UseChatReturn {
                 }
               }
             } catch (err) {
-              console.error('Failed to save bot response to transcript:', err)
+              // Failed to save bot response to transcript
             }
           },
-          (streamError: Error) => {
-            console.error('Streaming error:', streamError)
+          (_streamError: Error) => {
             setIsStreaming(false)
             // Fall back to mock response
             handleMockResponse(botMessage.id)
@@ -216,7 +211,6 @@ export function useChat(): UseChatReturn {
           }
           
           // For development: show brief message and fall back to mock
-          console.warn(`API unavailable (${apiError.status}): falling back to mock responses`)
           
           // Only show error for non-404 errors (404 is expected in dev)
           if (apiError.status !== 404) {
@@ -272,7 +266,6 @@ export function useChat(): UseChatReturn {
         currentIndex = Math.min(currentIndex + chunkSize, randomResponse.length) // Prevent overflow
         
         const streamingText = randomResponse.slice(0, currentIndex)
-        // console.log('Mock streaming update:', { currentIndex, chunkSize, streamingText: streamingText.substring(Math.max(0, currentIndex - 20)) })
         
         setMessages(prev => 
           prev.map(msg => 
@@ -316,7 +309,7 @@ export function useChat(): UseChatReturn {
               }
             }
           } catch (err) {
-            console.error('Failed to save mock response to transcript:', err)
+            // Failed to save mock response to transcript
           }
         }, 0)
       }
@@ -338,7 +331,6 @@ export function useChat(): UseChatReturn {
   const loadSession = useCallback(async (sessionId: string) => {
     // Don't reload if it's already the current session
     if (sessionId === currentSessionId) {
-      console.log('Session already loaded, skipping reload')
       return
     }
     
@@ -362,7 +354,6 @@ export function useChat(): UseChatReturn {
         setShowExportReminder(false)
       }
     } catch (err) {
-      console.error('Failed to load session:', err)
       setError('Failed to load conversation')
     }
   }, [currentSessionId])
@@ -379,7 +370,6 @@ export function useChat(): UseChatReturn {
     try {
       await transcriptStore.downloadTranscriptsAsMarkdown()
       setShowExportReminder(false) // Hide reminder after export
-      console.log('Conversations exported successfully')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Export failed')
     }
@@ -391,7 +381,6 @@ export function useChat(): UseChatReturn {
       setMessages([])
       setCurrentTranscript(null)
       setShowExportReminder(false)
-      console.log('All conversations deleted')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Delete failed')
     }
