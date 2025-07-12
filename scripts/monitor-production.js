@@ -7,8 +7,7 @@
 
 import https from 'https';
 
-const PRODUCTION_URL = 'https://jean-claude-prod.workers.dev';
-const DEVELOPMENT_URL = 'https://jean-claude-dev.workers.dev';
+const PRODUCTION_URL = 'https://jean-claude.lev-jampolsky.workers.dev';
 
 async function checkEndpoint(url, path = '') {
   return new Promise((resolve) => {
@@ -82,10 +81,10 @@ async function testChatAPI(baseUrl) {
   });
 }
 
-async function runHealthCheck(environment = 'production') {
-  const baseUrl = environment === 'production' ? PRODUCTION_URL : DEVELOPMENT_URL;
+async function runHealthCheck() {
+  const baseUrl = PRODUCTION_URL;
   
-  console.log(`\\n=== Jean-Claude ${environment.toUpperCase()} Health Check ===\\n`);
+  console.log(`\\n=== Jean-Claude Production Health Check ===\\n`);
 
   // Check main page
   const mainPage = await checkEndpoint(baseUrl);
@@ -136,8 +135,4 @@ async function runHealthCheck(environment = 'production') {
   }
 }
 
-// Parse command line arguments
-const args = process.argv.slice(2);
-const environment = args.includes('--dev') ? 'development' : 'production';
-
-runHealthCheck(environment);
+runHealthCheck();
