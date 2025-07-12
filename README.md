@@ -330,6 +330,7 @@ This project was built using a comprehensive stack of modern development tools:
 - **[Cursor](https://cursor.sh/)**: Primary IDE for development
 - **[Claude Code](https://claude.ai/code)** with **Sonnet 4** (and a bit of **Opus 4**): AI-powered coding assistant for implementation
 - **[TaskMaster MCP](https://github.com/eyaltoledano/claude-task-master)**: Implementation planning and task management
+- **[Polymet.AI](https://polymet.ai/)**: UI design and prototyping
 
 ### **AI Models & APIs** 
 - **[Mistral AI](https://mistral.ai/)**: Primary LLM API for Jean-Claude's responses
