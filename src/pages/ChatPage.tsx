@@ -4,7 +4,6 @@ import ChatInput from '@/components/chat-input'
 import ChatSidebar from '@/components/chat-sidebar'
 import OfflineBanner from '@/components/offline-banner'
 import RateLimitToast from '@/components/rate-limit-toast'
-import { ExportReminder } from '@/components/export-reminder'
 import SkipNav from '@/components/skip-nav'
 import { StatusAnnouncer } from '@/components/status-announcer'
 import PrivacyFooter from '@/components/privacy-footer'
@@ -17,17 +16,14 @@ export default function ChatPage() {
     isWaiting,
     isOffline,
     showRateLimit,
-    showExportReminder,
     error,
     currentSessionId,
     isSidebarOpen,
     sendMessage,
     newChat,
     loadSession,
-    exportMessages,
     deleteAllMessages,
     dismissRateLimit,
-    dismissExportReminder,
     dismissError,
     toggleSidebar,
     closeSidebar,
@@ -98,12 +94,6 @@ export default function ChatPage() {
         onClose={dismissRateLimit}
       />
 
-      {showExportReminder && (
-        <ExportReminder
-          onExport={exportMessages}
-          onDismiss={dismissExportReminder}
-        />
-      )}
 
       {error && (
         <div 

@@ -8,7 +8,6 @@ interface UseChatState {
   isWaiting: boolean
   isOffline: boolean
   showRateLimit: boolean
-  showExportReminder: boolean
   error: string | null
   currentSessionId: string | null
   isSidebarOpen: boolean
@@ -18,10 +17,8 @@ interface UseChatActions {
   sendMessage: (text: string) => Promise<void>
   newChat: () => void
   loadSession: (sessionId: string) => Promise<void>
-  exportMessages: () => Promise<void>
   deleteAllMessages: () => Promise<void>
   dismissRateLimit: () => void
-  dismissExportReminder: () => void
   dismissError: () => void
   toggleSidebar: () => void
   closeSidebar: () => void
@@ -35,7 +32,6 @@ export function useChat(): UseChatReturn {
   const [isWaiting, setIsWaiting] = useState(false)
   const [isOffline, setIsOffline] = useState(false)
   const [showRateLimit, setShowRateLimit] = useState(false)
-  const [showExportReminder, setShowExportReminder] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [currentTranscript, setCurrentTranscript] = useState<ChatTranscript | null>(null)
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null)
@@ -183,18 +179,13 @@ export function useChat(): UseChatReturn {
                 if (updatedSession) {
                   setCurrentTranscript(updatedSession)
                   
-                  // Check for export reminder (every 10 messages)
-                  const totalMessages = updatedSession.messages.length
-                  if (totalMessages > 0 && totalMessages % 10 === 0) {
-                    setShowExportReminder(true)
-                  }
                 }
               }
             } catch (err) {
               // Failed to save bot response to transcript
             }
           },
-          (_streamError: Error) => {
+          () => {
             setIsStreaming(false)
             // Fall back to mock response
             handleMockResponse(botMessage.id)
@@ -301,11 +292,6 @@ export function useChat(): UseChatReturn {
               if (updatedSession) {
                 setCurrentTranscript(updatedSession)
                 
-                // Check for export reminder (every 10 messages)
-                const totalMessages = updatedSession.messages.length
-                if (totalMessages > 0 && totalMessages % 10 === 0) {
-                  setShowExportReminder(true)
-                }
               }
             }
           } catch (err) {
@@ -323,7 +309,6 @@ export function useChat(): UseChatReturn {
     setMessages([])
     setError(null)
     setShowRateLimit(false)
-    setShowExportReminder(false)
     setCurrentTranscript(null)
     setCurrentSessionId(null)
   }, [])
@@ -351,8 +336,7 @@ export function useChat(): UseChatReturn {
         setMessages(uiMessages)
         setError(null)
         setShowRateLimit(false)
-        setShowExportReminder(false)
-      }
+        }
     } catch (err) {
       setError('Failed to load conversation')
     }
@@ -366,21 +350,12 @@ export function useChat(): UseChatReturn {
     setIsSidebarOpen(false)
   }, [])
 
-  const exportMessages = useCallback(async () => {
-    try {
-      await transcriptStore.downloadTranscriptsAsMarkdown()
-      setShowExportReminder(false) // Hide reminder after export
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Export failed')
-    }
-  }, [])
 
   const deleteAllMessages = useCallback(async () => {
     try {
       await transcriptStore.deleteAllTranscripts()
       setMessages([])
       setCurrentTranscript(null)
-      setShowExportReminder(false)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Delete failed')
     }
@@ -390,9 +365,6 @@ export function useChat(): UseChatReturn {
     setShowRateLimit(false)
   }, [])
 
-  const dismissExportReminder = useCallback(() => {
-    setShowExportReminder(false)
-  }, [])
 
   const dismissError = useCallback(() => {
     setError(null)
@@ -405,7 +377,6 @@ export function useChat(): UseChatReturn {
     isWaiting,
     isOffline,
     showRateLimit,
-    showExportReminder,
     error,
     currentSessionId,
     isSidebarOpen,
@@ -413,10 +384,8 @@ export function useChat(): UseChatReturn {
     sendMessage,
     newChat,
     loadSession,
-    exportMessages,
     deleteAllMessages,
     dismissRateLimit,
-    dismissExportReminder,
     dismissError,
     toggleSidebar,
     closeSidebar,

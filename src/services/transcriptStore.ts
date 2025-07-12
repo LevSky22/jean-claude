@@ -120,48 +120,7 @@ class TranscriptStore {
     }
   }
 
-  async exportTranscriptsAsMarkdown(): Promise<string> {
-    const transcripts = await this.getAllTranscripts();
-    
-    if (transcripts.length === 0) {
-      return '# Jean-Claude Chat Transcripts\n\nNo transcripts available.';
-    }
 
-    let markdown = '# Jean-Claude Chat Transcripts\n\n';
-    markdown += `Exported on: ${new Date().toLocaleString()}\n\n`;
-
-    for (const transcript of transcripts) {
-      markdown += `## ${transcript.title}\n\n`;
-      markdown += `**Created:** ${new Date(transcript.createdAt).toLocaleString()}\n`;
-      markdown += `**Updated:** ${new Date(transcript.updatedAt).toLocaleString()}\n\n`;
-
-      for (const message of transcript.messages) {
-        const role = message.role === 'user' ? 'User' : 'Jean-Claude';
-        markdown += `### ${role}\n\n`;
-        markdown += `${message.content}\n\n`;
-        markdown += `*${new Date(message.timestamp).toLocaleString()}*\n\n`;
-        markdown += '---\n\n';
-      }
-
-      markdown += '\n';
-    }
-
-    return markdown;
-  }
-
-  async downloadTranscriptsAsMarkdown(): Promise<void> {
-    const markdown = await this.exportTranscriptsAsMarkdown();
-    const blob = new Blob([markdown], { type: 'text/markdown' });
-    const url = URL.createObjectURL(blob);
-    
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `jean-claude-transcripts-${new Date().toISOString().split('T')[0]}.md`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }
 
   async getTranscriptCount(): Promise<number> {
     try {
