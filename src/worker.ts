@@ -100,12 +100,32 @@ function isValidOrigin(request: Request): boolean {
   return false;
 }
 
-// CORS headers for browser compatibility
-const corsHeaders = {
+// Security headers for browser compatibility
+const securityHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
   'Cache-Control': 'no-cache, no-store, must-revalidate',
+  // Content Security Policy
+  'Content-Security-Policy': [
+    "default-src 'self'",
+    "script-src 'self' 'unsafe-inline'", // Allow inline scripts for React
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com", // Allow Google Fonts and inline styles
+    "font-src 'self' https://fonts.gstatic.com data:", // Allow Google Fonts and data URIs for icon fonts
+    "img-src 'self' data:", // Allow self-hosted images and data URIs
+    "connect-src 'self'", // Allow API calls to same origin
+    "manifest-src 'self'",
+    "base-uri 'self'",
+    "frame-ancestors 'none'", // Prevent embedding in frames
+    "form-action 'self'",
+    "upgrade-insecure-requests"
+  ].join('; '),
+  // Additional security headers
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY',
+  'X-XSS-Protection': '1; mode=block',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=()'
 };
 
 // Jean-Claude system prompt
@@ -198,14 +218,13 @@ async function handleChatRequest(request: Request, env: Env): Promise<Response> 
   try {
     // Validate API key is available
     if (!env.MISTRAL_API_KEY) {
-      console.error('MISTRAL_API_KEY environment variable is not set');
       return new Response(
         JSON.stringify({ error: 'API configuration error' }),
         {
           status: 500,
           headers: {
             'Content-Type': 'application/json',
-            ...corsHeaders,
+            ...securityHeaders,
           },
         }
       );
@@ -216,7 +235,6 @@ async function handleChatRequest(request: Request, env: Env): Promise<Response> 
     const rateLimitResult = await rateLimiter.checkRateLimit(clientIP);
     
     if (!rateLimitResult.success) {
-      console.warn(`Rate limit exceeded for IP: ${clientIP}`);
       return new Response(
         JSON.stringify({ 
           error: 'Rate limit exceeded. Please slow down and try again later.',
@@ -227,7 +245,7 @@ async function handleChatRequest(request: Request, env: Env): Promise<Response> 
           headers: {
             'Content-Type': 'application/json',
             'Retry-After': rateLimitResult.retryAfter?.toString() || '60',
-            ...corsHeaders,
+            ...securityHeaders,
           },
         }
       );
@@ -243,7 +261,7 @@ async function handleChatRequest(request: Request, env: Env): Promise<Response> 
           status: 400,
           headers: {
             'Content-Type': 'application/json',
-            ...corsHeaders,
+            ...securityHeaders,
           },
         }
       );
@@ -330,7 +348,7 @@ async function handleChatRequest(request: Request, env: Env): Promise<Response> 
           status: statusCode,
           headers: {
             'Content-Type': 'application/json',
-            ...corsHeaders,
+            ...securityHeaders,
           },
         }
       );
@@ -381,7 +399,7 @@ async function handleChatRequest(request: Request, env: Env): Promise<Response> 
                       controller.enqueue(new TextEncoder().encode(`data: ${data}\n\n`));
                     }
                   } catch (e) {
-                    console.warn('Invalid JSON in stream, skipping:', data.substring(0, 100));
+                    // Invalid JSON in stream, skipping
                   }
                 }
               } else if (line.trim() === '') {
@@ -402,12 +420,11 @@ async function handleChatRequest(request: Request, env: Env): Promise<Response> 
       headers: {
         'Content-Type': 'text/event-stream',
         'Connection': 'keep-alive',
-        ...corsHeaders,
+        ...securityHeaders,
       },
     });
 
   } catch (error) {
-    console.error('Handler error:', error);
     return new Response(
       JSON.stringify({ 
         error: 'Internal server error',
@@ -417,7 +434,7 @@ async function handleChatRequest(request: Request, env: Env): Promise<Response> 
         status: 500,
         headers: {
           'Content-Type': 'application/json',
-          ...corsHeaders,
+          ...securityHeaders,
         },
       }
     );
@@ -434,7 +451,7 @@ async function handleHealthCheck(): Promise<Response> {
     {
       headers: {
         'Content-Type': 'application/json',
-        ...corsHeaders,
+        ...securityHeaders,
       },
     }
   );
@@ -449,7 +466,7 @@ export default {
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         status: 200,
-        headers: corsHeaders,
+        headers: securityHeaders,
       });
     }
 
@@ -457,17 +474,13 @@ export default {
     if (pathname.startsWith('/api/')) {
       // Validate origin for API requests
       if (!isValidOrigin(request)) {
-        const origin = request.headers.get('Origin');
-        const referer = request.headers.get('Referer');
-        console.warn(`Rejected API request from invalid origin. Origin: ${origin}, Referer: ${referer}`);
-        
         return new Response(
           JSON.stringify({ error: 'Forbidden: Invalid origin' }),
           {
             status: 403,
             headers: {
               'Content-Type': 'application/json',
-              ...corsHeaders,
+              ...securityHeaders,
             },
           }
         );
@@ -489,20 +502,65 @@ export default {
           status: 404,
           headers: {
             'Content-Type': 'application/json',
-            ...corsHeaders,
+            ...securityHeaders,
           },
         }
       );
     }
 
-    // Serve static assets with SPA fallback
+    // Serve static assets with SPA fallback and security headers
     // Try to serve the requested file first
     const response = await env.ASSETS.fetch(request);
     
     // If file not found (404) and it's not an API request, serve index.html for SPA routing
     if (response.status === 404 && !pathname.startsWith('/api/')) {
       const indexRequest = new Request(new URL('/', request.url), request);
-      return env.ASSETS.fetch(indexRequest);
+      const indexResponse = await env.ASSETS.fetch(indexRequest);
+      
+      // Add security headers to index.html
+      if (indexResponse.ok) {
+        return new Response(indexResponse.body, {
+          status: indexResponse.status,
+          statusText: indexResponse.statusText,
+          headers: {
+            ...Object.fromEntries(indexResponse.headers.entries()),
+            ...securityHeaders
+          }
+        });
+      }
+      return indexResponse;
+    }
+    
+    // Add security headers to successful static asset responses
+    if (response.ok) {
+      const contentType = response.headers.get('Content-Type') || '';
+      
+      // For HTML files, apply full security headers
+      if (contentType.includes('text/html')) {
+        return new Response(response.body, {
+          status: response.status,
+          statusText: response.statusText,
+          headers: {
+            ...Object.fromEntries(response.headers.entries()),
+            ...securityHeaders
+          }
+        });
+      }
+      
+      // For other assets (CSS, JS, images), apply basic security headers without CSP
+      const basicHeaders = {
+        'X-Content-Type-Options': 'nosniff',
+        'Cache-Control': response.headers.get('Cache-Control') || 'public, max-age=31536000'
+      };
+      
+      return new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: {
+          ...Object.fromEntries(response.headers.entries()),
+          ...basicHeaders
+        }
+      });
     }
     
     return response;

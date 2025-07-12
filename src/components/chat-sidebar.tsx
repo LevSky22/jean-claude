@@ -206,7 +206,7 @@ export default function ChatSidebar({
       const allSessions = await transcriptStore.getAllTranscripts()
       setSessions(allSessions)
     } catch (error) {
-      console.error('Failed to load sessions:', error)
+      // Failed to load sessions
     } finally {
       setLoading(false)
     }
@@ -287,7 +287,7 @@ export default function ChatSidebar({
         onNewSession()
       }
     } catch (error) {
-      console.error('Failed to delete session:', error)
+      // Failed to delete session
     }
   }
 

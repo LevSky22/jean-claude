@@ -144,7 +144,6 @@ export async function processStreamingResponse(
             // All other JSON data is metadata and should be ignored
           } catch (parseError) {
             // If JSON parsing fails, it might be a malformed chunk - ignore it
-            console.log('Invalid JSON in stream, ignoring:', data.substring(0, 100))
           }
         }
         // Don't process non-data lines - they're SSE metadata

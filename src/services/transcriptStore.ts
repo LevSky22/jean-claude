@@ -62,7 +62,7 @@ class TranscriptStore {
       const transcript = await get(this.generateTranscriptKey(id));
       return transcript || null;
     } catch (error) {
-      console.error('Error loading transcript:', error);
+      // Error loading transcript
       return null;
     }
   }
@@ -87,7 +87,7 @@ class TranscriptStore {
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
     } catch (error) {
-      console.error('Error loading all transcripts:', error);
+      // Error loading all transcripts
       return [];
     }
   }
@@ -97,7 +97,7 @@ class TranscriptStore {
       await del(this.generateTranscriptKey(id));
       return true;
     } catch (error) {
-      console.error('Error deleting transcript:', error);
+      // Error deleting transcript
       return false;
     }
   }
@@ -115,7 +115,7 @@ class TranscriptStore {
 
       return true;
     } catch (error) {
-      console.error('Error deleting all transcripts:', error);
+      // Error deleting all transcripts
       return false;
     }
   }
@@ -170,7 +170,7 @@ class TranscriptStore {
         typeof key === 'string' && key.startsWith(this.keyPrefix)
       ).length;
     } catch (error) {
-      console.error('Error getting transcript count:', error);
+      // Error getting transcript count
       return 0;
     }
   }

@@ -7,12 +7,10 @@ export function runAccessibilityChecks() {
   // @ts-expect-error import.meta.env typing issue in dev builds
   if (import.meta.env?.PROD) return;
 
-  console.log('🔍 Running accessibility checks...');
-
   // Check for images without alt text
   const imagesWithoutAlt = document.querySelectorAll('img:not([alt])');
   if (imagesWithoutAlt.length > 0) {
-    console.warn(`⚠️ Found ${imagesWithoutAlt.length} images without alt text:`, imagesWithoutAlt);
+    // Found images without alt text
   }
 
   // Check for buttons without accessible labels
@@ -23,7 +21,7 @@ export function runAccessibilityChecks() {
     return !hasText && !hasAriaLabel && !hasAriaLabelledBy;
   });
   if (buttonsWithoutLabel.length > 0) {
-    console.warn(`⚠️ Found ${buttonsWithoutLabel.length} buttons without accessible labels:`, buttonsWithoutLabel);
+    // Found buttons without accessible labels
   }
 
   // Check for form inputs without labels
@@ -35,12 +33,12 @@ export function runAccessibilityChecks() {
     return !hasLabel && !hasAriaLabel && !hasAriaLabelledBy;
   });
   if (inputsWithoutLabel.length > 0) {
-    console.warn(`⚠️ Found ${inputsWithoutLabel.length} form inputs without labels:`, inputsWithoutLabel);
+    // Found form inputs without labels
   }
 
   // Check for missing ARIA live regions
-  const liveRegions = document.querySelectorAll('[aria-live]');
-  console.log(`✅ Found ${liveRegions.length} ARIA live regions`);
+  document.querySelectorAll('[aria-live]');
+  // Found ARIA live regions
 
   // Check for proper heading hierarchy
   const headings = Array.from(document.querySelectorAll('h1, h2, h3, h4, h5, h6'));
@@ -49,24 +47,24 @@ export function runAccessibilityChecks() {
   headings.forEach(heading => {
     const level = parseInt(heading.tagName[1]);
     if (level > lastLevel + 1) {
-      console.warn(`⚠️ Heading hierarchy issue: ${heading.tagName} follows h${lastLevel}`);
+      // Heading hierarchy issue
       headingIssues++;
     }
     lastLevel = level;
   });
 
   // Check for keyboard navigation
-  const focusableElements = document.querySelectorAll(
+  document.querySelectorAll(
     'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
   );
-  console.log(`✅ Found ${focusableElements.length} keyboard-focusable elements`);
+  // Found keyboard-focusable elements
 
   // Summary
   const totalIssues = imagesWithoutAlt.length + buttonsWithoutLabel.length + inputsWithoutLabel.length + headingIssues;
   if (totalIssues === 0) {
-    console.log('✅ No accessibility issues detected!');
+    // No accessibility issues detected
   } else {
-    console.warn(`⚠️ Total accessibility issues found: ${totalIssues}`);
+    // Total accessibility issues found
   }
 }
 
