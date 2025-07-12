@@ -21,7 +21,7 @@ export default function ChatHeader({
         size="sm"
         onClick={onToggleSidebar}
         className="absolute left-4 h-8 w-8 p-0 text-[#0055A4] hover:text-[#0055A4] hover:bg-blue-50 hover:shadow-sm hover:scale-105 active:scale-100 transition-all duration-200 focus-visible:ring-0 focus-visible:ring-offset-0"
-        aria-label={isSidebarOpen ? "Fermer le menu des conversations" : "Ouvrir le menu des conversations"}
+        aria-label={isSidebarOpen ? "Close conversation menu" : "Open conversation menu"}
         aria-expanded={isSidebarOpen}
         aria-haspopup="true"
       >
@@ -29,9 +29,9 @@ export default function ChatHeader({
       </Button>
       
       <Link 
-        to="/chat" 
+        to="/" 
         className="flex items-center gap-2 focus:outline-none rounded-md"
-        aria-label="Retour à l'accueil de Jean-Claude"
+        aria-label="Return to Jean-Claude home"
       >
         <img 
           src="/fleur-de-lis.png" 

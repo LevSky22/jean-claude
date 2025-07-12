@@ -15,5 +15,16 @@
   
   "build": {
     "command": "npm run build:worker"
-  }
+  },
+  
+  "routes": [
+    {
+      "pattern": "jeanclaude.chat/*",
+      "zone_name": "jeanclaude.chat"
+    },
+    {
+      "pattern": "www.jeanclaude.chat/*",
+      "zone_name": "jeanclaude.chat"
+    }
+  ]
 }

@@ -37,11 +37,11 @@ export default function ChatPage() {
   return (
     <div className="chat-page-grid">
       <SkipNav targetId="main-content">
-        Aller au contenu principal
+        Skip to main content
       </SkipNav>
       
       <SkipNav targetId="chat-input">
-        Aller à la saisie de message
+        Skip to message input
       </SkipNav>
 
       <ChatSidebar
@@ -67,7 +67,7 @@ export default function ChatPage() {
       <main 
         id="main-content" 
         className="overflow-hidden relative" 
-        aria-label="Zone de conversation principale"
+        aria-label="Main conversation area"
         role="main"
       >
         <ChatContainer messages={messages} isStreaming={isStreaming} />
@@ -114,13 +114,13 @@ export default function ChatPage() {
         >
           <div className="flex justify-between items-center">
             <span>
-              <span className="sr-only">Erreur : </span>
+              <span className="sr-only">Error: </span>
               {error}
             </span>
             <button
               onClick={dismissError}
               className="text-red-600 hover:text-red-800 font-bold text-lg"
-              aria-label="Fermer le message d'erreur"
+              aria-label="Close error message"
             >
               ×
             </button>

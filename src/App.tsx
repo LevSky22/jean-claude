@@ -7,8 +7,8 @@ function App() {
     <Router>
       <ChatLayout>
         <Routes>
-          <Route path="/chat" element={<ChatPage />} />
-          <Route path="/" element={<Navigate to="/chat" replace />} />
+          <Route path="/" element={<ChatPage />} />
+          <Route path="/chat" element={<Navigate to="/" replace />} />
         </Routes>
       </ChatLayout>
     </Router>
