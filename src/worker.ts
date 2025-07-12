@@ -495,7 +495,16 @@ export default {
       );
     }
 
-    // Serve static assets
-    return env.ASSETS.fetch(request);
+    // Serve static assets with SPA fallback
+    // Try to serve the requested file first
+    const response = await env.ASSETS.fetch(request);
+    
+    // If file not found (404) and it's not an API request, serve index.html for SPA routing
+    if (response.status === 404 && !pathname.startsWith('/api/')) {
+      const indexRequest = new Request(new URL('/', request.url), request);
+      return env.ASSETS.fetch(indexRequest);
+    }
+    
+    return response;
   },
 };

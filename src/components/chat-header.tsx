@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Menu } from 'lucide-react'
-import FleurDeLis from '@/components/fleur-de-lis'
 
 interface ChatHeaderProps {
   onToggleSidebar: () => void
@@ -34,7 +33,12 @@ export default function ChatHeader({
         className="flex items-center gap-2 focus:outline-none rounded-md"
         aria-label="Retour à l'accueil de Jean-Claude"
       >
-        <FleurDeLis className="h-6 w-6" aria-hidden="true" />
+        <img 
+          src="/fleur-de-lis.png" 
+          alt="" 
+          className="h-6 w-6" 
+          aria-hidden="true" 
+        />
 
         <h1 className="font-serif text-[22px] md:text-[28px] font-bold text-[#0055A4] select-text">
           Jean-Claude

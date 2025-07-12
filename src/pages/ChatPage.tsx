@@ -66,11 +66,21 @@ export default function ChatPage() {
       {/* Grid row 2: Chat content (1fr - takes remaining space) */}
       <main 
         id="main-content" 
-        className="overflow-hidden" 
+        className="overflow-hidden relative" 
         aria-label="Zone de conversation principale"
         role="main"
       >
         <ChatContainer messages={messages} isStreaming={isStreaming} />
+        
+        {/* Jean-Claude character image */}
+        <div className="absolute bottom-0 right-6 z-10 pointer-events-none">
+          <img 
+            src="/jean-claude.png" 
+            alt="Jean-Claude character illustration"
+            className="h-40 md:h-48 w-auto opacity-90 hover:opacity-100 transition-opacity duration-300 drop-shadow-xl"
+            aria-hidden="true"
+          />
+        </div>
       </main>
 
       {/* Grid row 3: Input (auto height) */}

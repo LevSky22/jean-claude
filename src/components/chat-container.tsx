@@ -1,6 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
 import ChatMessage from '@/components/chat-message'
-import FleurDeLis from '@/components/fleur-de-lis'
 import { LiveAnnouncer } from '@/components/live-announcer'
 
 interface Message {
@@ -60,11 +59,8 @@ export default function ChatContainer({
       style={{ overscrollBehavior: 'contain' }}
     >
       {messages.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-full min-h-[60vh] text-center p-6 relative">
-          <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none" aria-hidden="true">
-            <FleurDeLis className="w-64 h-64" aria-hidden="true" />
-          </div>
-          <header role="banner" className="relative z-10">
+        <div className="flex flex-col items-center justify-center h-full min-h-[60vh] text-center p-6">
+          <header role="banner">
             <h2 className="font-serif text-2xl font-bold text-[#0055A4] mb-4 select-text">
               Oh mon dieu... Another pesky tourist... 
               <br />Go on, ask your questions!
