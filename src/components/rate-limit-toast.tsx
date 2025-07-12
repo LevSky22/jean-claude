@@ -34,7 +34,7 @@ export default function RateLimitToast({
 
       <AlertDescription className="text-white font-medium">
         <span className="sr-only">Rate limit reached: </span>
-        Slow down, my friend—too many messages 👀
+        Roh, là là mon ami. Tranquille. You are sending too many messages.
       </AlertDescription>
     </Alert>
   );
