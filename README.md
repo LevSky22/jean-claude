@@ -4,6 +4,8 @@ A charmingly sassy Parisian AI chatbot with authentic French personality, theatr
 
 **Live Demo**: [jeanclaude.chat](https://jeanclaude.chat)
 
+![Jean-Claude Interface](docs/interface-screenshot.png)
+
 ## ✨ Features
 
 - **🎭 Authentic Parisian Personality**: Jean-Claude embodies the quintessential Left Bank intellectual with amused disdain
@@ -168,7 +170,8 @@ jean-claude/
 │   └── jean-claude.png    # Jean-Claude character artwork
 ├── docs/                   # Project documentation
 │   ├── prd.md             # Product Requirements Document
-│   └── jeanclaude.md      # Jean-Claude's system prompt
+│   ├── jeanclaude.md      # Jean-Claude's system prompt
+│   └── interface-screenshot.png  # Main interface screenshot
 ├── dist/                   # Build output
 ├── wrangler.jsonc          # Workers configuration
 ├── deploy-worker.sh        # Deployment script
