@@ -29,7 +29,7 @@ export default function PrivacyFooter() {
       <p className="text-xs text-gray-400 max-w-[720px] mx-auto mt-2">
         Made with fun by{' '}
         <a 
-          href="https://x.com/LevJampolsky" 
+          href="https://x.com/LevJampolsky/status/1944090221361954918" 
           target="_blank" 
           rel="noopener noreferrer"
           className="text-[#0055A4] hover:underline focus:outline-none focus:ring-2 focus:ring-[#0055A4] focus:ring-offset-1 rounded"
@@ -37,6 +37,17 @@ export default function PrivacyFooter() {
         >
           @LevJampolsky
         </a>
+        {' '}(
+        <a 
+          href="https://github.com/LevSky22/jean-claude" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-[#0055A4] hover:underline focus:outline-none focus:ring-2 focus:ring-[#0055A4] focus:ring-offset-1 rounded"
+          aria-label="GitHub repository (opens in new tab)"
+        >
+          GitHub
+        </a>
+        )
         {' '}and inspired by{' '}
         <a 
           href="https://x.com/gregisenberg/status/1942944431931281528" 
