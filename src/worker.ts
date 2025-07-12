@@ -41,8 +41,7 @@ const MISTRAL_MODEL = 'mistral-small-latest';
 
 // Allowed origins for security validation
 const ALLOWED_ORIGINS = [
-  'https://jean-claude.workers.dev',
-  'https://jean-claude.lev-jampolsky.workers.dev',
+  'https://jeanclaude.chat',
   'http://localhost:3000',
   'https://localhost:3000',
   'http://127.0.0.1:3000',
